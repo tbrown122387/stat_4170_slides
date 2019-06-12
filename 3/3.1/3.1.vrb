@@ -1,0 +1,17 @@
+\frametitle{Back to Example 3.1.1}
+
+Checking our answers:
+\[
+X_t - .5 X_{t-1} = Z_t + .4 Z_{t-1}
+\]
+\[
+X_t = \sum_{j=0}^{\infty}\psi_j Z_{t-j}
+\]
+where $\psi_0 = 1$, $\psi_1 = .4 + .5$, $\psi_2 = .5(.4 + .5)$, $\psi_3 = .5^2(.4 + .5)$, $\ldots$
+\newline
+
+This function ignores the $1$s. Also be careful about the signs of the coefficients!
+\begin{verbatim}
+ARMAtoMA(ar=c(.5), ma=c(.4), lag.max=3)
+\end{verbatim}
+

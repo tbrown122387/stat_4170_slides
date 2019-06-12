@@ -1,0 +1,18 @@
+\frametitle{Test 5: The Rank Test}
+
+For residuals $y_1, \ldots, y_n$, let $P$ denote the number of pairs $(i,j)$ that
+\[
+y_i < y_{j},
+\]
+with $1 \le i < n$ and $i < j$.
+\newline
+
+For large $n$, under the null hypothesis of iid noise, it is approximately true that
+\[
+P \sim \text{Normal}\left( \frac{n(n-1)}{4}, \frac{n(n-1)(2n+5)}{72} \right).
+\]
+
+\begin{verbatim}
+library(randtests)
+rank.test(coredata(residuals), alternative = "two.sided")
+\end{verbatim}

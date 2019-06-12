@@ -1,0 +1,298 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx, bm}
+\usepackage{dirtytalk} % quote thing
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["8.3"]{8.3: Estimating the Mean and Covariance Function}
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+In this section we introduce estimators, for a stationary m-variate time series $\{X_t\}$, of the components $\mu_j$, $\gamma_{ij}(h)$, and $\rho_{ij}(h)$ of $\bm{\mu}$, $\Gamma(h)$, and $R(h)$, respectively. We also examine the large-sample properties of these estimators.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Estimating $\bm{\mu}$}
+
+One estimator for the mean is 
+\[
+\bm{\bar{X}}_n = \frac{1}{n}\sum_{i=1}^n \bm{X}_i
+\]
+
+\begin{block}{Proposition 8.3.1}
+If $\{\bm{X}_t\}$ is a stationary multivariate time series with mean $\bm{\mu}$ and covariance function $\Gamma(\cdot)$, then as $n\to \infty$
+\[
+E(\bm{X}_n - \bm{\mu})'(\bm{X}_n - \bm{\mu}) \to 0 \hspace{10mm} \text{if } \gamma_{ii}(n) \to 0 \hspace{10mm} 1 \le i \le n
+\]
+and
+\[
+nE(\bm{X}_n - \bm{\mu})'(\bm{X}_n - \bm{\mu}) \to \sum_{i=1}^m \sum_{h=\infty}^{\infty} \gamma_{ii}(h) \hspace{5mm} \text{if }  \sum_{h=\infty}^{\infty}| \gamma_{ii}(h)|< \infty \hspace{5mm} 1 \le i \le n
+\]
+\end{block}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Estimating $\bm{\mu}$}
+
+The mean $\bm{\bar{X}}_n = \frac{1}{n}\sum_{i=1}^n \bm{X}_i$ is asymptotically Normal, but we are not going to look at the formula for it's asymptotic covariance matrix. If you want to make individual confidence intervals or tests for elements of $\bm{\mu}$, use Proposition 2.4.1.
+
+
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Estimating $\Gamma(\cdot)$}
+
+A natural estimator for $\Gamma(\cdot)$ is 
+\[
+\hat{\Gamma}(h) = 
+\begin{cases}
+n^{-1}\sum_{t=1}^{n-h}(\mathbf{X}_{t+h}-\bar{\mathbf{X}} )(\mathbf{X}_{t}-\bar{\mathbf{X}} )' & 0 \le h \le n-1\\
+-\hat{\Gamma}'(-h) & -(n-1) \le h < 0 
+\end{cases}
+\]
+Note the typo in the book. 
+\newline
+
+Cross-correlations can be estimated with $\hat{\rho}_{ij}(h)= \hat{\gamma}_{ij}(h) [ \hat{\gamma}_{ii}(0)\hat{\gamma}_{jj}(0) ]^{-1/2} $
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Theorem 8.3.1}
+
+Let $\{\mathbf{X}_{t}\}$ be the bivariate time series whose components are defined by 
+\[
+X_{t1} = \sum_{k=-\infty}^{\infty} \alpha_k Z_{t-k,1}, \hspace{10mm} \{Z_{t1}\} \sim \text{IID}(0, \sigma^2_1)
+\]
+and
+\[
+X_{t2} = \sum_{k=-\infty}^{\infty} \beta_k Z_{t-k,2}, \hspace{10mm} \{Z_{t2}\} \sim \text{IID}(0, \sigma^2_2)
+\]
+where the two sequences $\{Z_{t1}\}$ and $\{Z_{t2}\}$ are independent, $\sum_k |\alpha_k| < \infty$,  and $\sum_k |\beta_k| < \infty$.
+
+Then for all integers $h,k$, $h \neq k$, $\sqrt{n}(\hat{\rho}_{12}(h), \hat{\rho}_{12}(k))'$ is asymptotically Normal, with mean $\bm{0}$ and covariance matrix
+
+\[
+\left[\begin{array}{cc}
+\sum_{j=-\infty}^{\infty} \rho_{11}(j)\rho_{22}(j) & \sum_{j=-\infty}^{\infty}\rho_{11}(j)\rho_{22}(j+k-h)  \\
+\sum_{j=-\infty}^{\infty}\rho_{11}(j+k-h)\rho_{22}(j) & \sum_{j=-\infty}^{\infty} \rho_{11}(j)\rho_{22}(j)
+\end{array}\right]
+\] 
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Theorem 8.3.1: Special case 1}
+
+Assume everything from the last slide. Then, in particular,
+\[
+\sqrt{n}\hat{\rho}_{12}(h) \overset{D}{\to} \text{N}\left(0, \sum_{j=-\infty}^{\infty} \rho_{11}(j)\rho_{22}(j) \right).
+\]
+
+Practically speaking: you can still observe large cross-correlations for independent time series!
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Theorem 8.3.1: Special case 2}
+
+Assume everything from the last slide. Assume further that atleast one of $X_{t1}$ and $X_{t,2}$ is white noise. Then, in particular,
+\[
+\sqrt{n}\hat{\rho}_{12}(h) \overset{D}{\to} \text{N}\left(0, 1 \right).
+\]
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Option 1: prewhitening}
+
+If
+\begin{align*}
+\phi^{(1)}(B)X_{t1} &= \theta^{(1)}(B)Z_{t1} \\
+\phi^{(2)}(B)X_{t2} &= \theta^{(2)}(B)Z_{t2} 
+\end{align*}
+then
+\begin{align*}
+\frac{\phi^{(1)}(B)}{\theta^{(2)}(B)} X_{t1} &= \frac{\theta^{(1)} (B) }{\theta^{(2)} (B) } Z_{t1} \\
+\frac{\phi^{(2)}(B) }{\theta^{(2)}(B)}X_{t2} &= Z_{t2} .
+\end{align*}
+This means, estimate a univariate model on one of the series. And then use it to filter both series.
+
+
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Option 2}
+
+If
+\begin{align*}
+\phi^{(1)}(B)X_{t1} &= \theta^{(1)}(B)Z_{t1} \\
+\phi^{(2)}(B)X_{t2} &= \theta^{(2)}(B)Z_{t2} 
+\end{align*}
+then estimate both models, and examine the CCF of the residuals $\{\hat{W}_{t1}\}$ and $\{\hat{W}_{t2}\}$ (section 5.3). 
+
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Bartlett's Formula}
+
+All of this so far assumes that the two series are independent! If they are not, then we can use Bartlett's formula. 
+\newline
+
+Assume $\{\mathbf{X}_t\}$ is a bivariate *Gaussian* time series with covariances satisfying $\sum_{h=-\infty}^{\infty} | \gamma_{ij}(h) | < \infty$, $i,j = 1,2$. Notice that these two series are not necessarily independent. Bartlet's formula is an approximation 
+
+\[
+ n \operatorname{Cov} (\hat{\rho}_{12}(h), \hat{\rho}_{12}(k))
+ \]
+
+It is not reproduced here. But if you need it, it is on page 242.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example: Sales with A Leading Indicator}
+
+We assume 
+\[
+X_{t1} - \mu_1 = (1 + \theta_{11}B)Z_{t1}
+\]
+and
+\[
+(1 - \phi_{11}B)(X_{t2} - \mu_2) = (1 + \theta_{21}B)Z_{t2}
+\]
+We look at the residuals, which is kind of like looking at 
+\begin{align*}
+\frac{1}{(1 + \theta_{11}B)} \left(X_{t1} - \mu_1\right) &= Z_{t2}\\
+\frac{(1 - \phi_{11}B)}{(1 + \theta_{21}B)} (X_{t2} - \mu_2) &= Z_{t2}
+\end{align*}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example: Sales with A Leading Indicator (continued)}
+
+\begin{align*}
+\frac{1}{(1 + \theta_{11}B)} \left(X_{t1} - \mu_1\right) &= Z_{t1}\\
+\frac{(1 - \phi_{11}B)}{(1 + \theta_{21}B)} (X_{t2} - \mu_2) &= Z_{t2}
+\end{align*}
+Looking at the CCF, we find $\operatorname{Cov}( Z_{t-3,1}, Z_{t,2}  ) \neq 0$.
+\begin{align*}
+Z_{t,2} &= \beta Z_{t-3,1} + N_t \\
+\frac{(1 - \phi_{11}B)}{(1 + \theta_{21}B)} (X_{t2} - \mu_2) &= \frac{1}{(1 + \theta_{11}B)} \left(X_{t-3,1} - \mu_1\right) + N_t
+\end{align*}
+...messy. See 8.3.r for more details.
+\end{frame}
+
+
+\end{document} 

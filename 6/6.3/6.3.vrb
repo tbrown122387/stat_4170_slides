@@ -1,0 +1,14 @@
+\frametitle{Unit Roots in the MA polynomial}
+
+Simplify by setting $k=1$ which is what happens most of the time in financial time series anyways
+\[
+X_t = c + X_{t-1} + Z_t \iff \triangledown X_t = c + Z_t
+\]
+and
+\[
+X_t = a + c t + Z_t \iff \triangledown X_t = c +  Z_t - Z_{t-1}
+\]
+If you run one simulation for each, they look very similar! However, the second one has a unit root.
+\newline
+
+Watch out for overdifferencing!

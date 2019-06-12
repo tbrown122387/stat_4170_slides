@@ -1,0 +1,133 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx, bm}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["5.3"]{5.3: Diagnostic Checking}
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+Typically, the goodness of fit of a statistical model to a set of data is judged by comparing the observed values with the corresponding predicted values obtained from the fitted model. If the fitted model is appropriate, then the residuals should behave in a manner that is consistent with the model.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Our Output}
+
+When we fit an ARMA(p,q) model, we obtain
+\begin{enumerate}
+\item estimators $\hat{\bm{\phi}}, \hat{\bm{\theta}}, \hat{\sigma}^2$ (estimated from the entire dataset)
+\item predicted values $\hat{X}_t(\hat{\bm{\phi}}, \hat{\bm{\theta}}, \hat{\sigma}^2)$ 
+\item predicted variances $r_{t-1}( \hat{\bm{\phi}}, \hat{\bm{\theta}})$, with $\sigma^2 r_{t-1} = v_{t-1} = E[(X_t - \hat{X}_t)^2]$
+\end{enumerate}
+NB: the predicted values are only functions of the previous data, but that function itself is estimated using future data
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definition of Residuals}
+
+The standardized residuals are
+\[
+\hat{W}_t = \frac{(X_t - \hat{X}_t[\hat{\bm{\phi}}, \hat{\bm{\theta}}, \hat{\sigma}^2] ) )}{ \sqrt{r_{t-1}( \hat{\bm{\phi}}, \hat{\bm{\theta}}) } }
+\]
+or 
+\[
+\hat{R}_t = \frac{(X_t - \hat{X}_t[\hat{\bm{\phi}}, \hat{\bm{\theta}}, \hat{\sigma}^2] ) )}{ \sqrt{\hat{\sigma}^2 r_{t-1}( \hat{\bm{\phi}}, \hat{\bm{\theta}}) } }
+\]
+If the fitted model is correct, and if $Z_t$ are WN (IID noise), then the standardized residuals are approximately WN (IID noise) with either variance $\sigma^2$ or $1$, depending on which you use.
+\newline
+
+Now we can use all of the tests from Section 1.6 to check our model!
+
+
+\end{frame}
+
+
+
+
+
+
+
+\end{document} 

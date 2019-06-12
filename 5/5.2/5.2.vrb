@@ -1,0 +1,19 @@
+\frametitle{Confidence Intervals}
+
+\begin{block}{MLE Sampling Distribution}
+\[
+\hat{\bm{\beta}} \overset{\text{approx.}}{\sim} \text{Normal}(\bm{\beta}, n^{-1}V(\bm{\beta})).
+\]
+\end{block}
+\begin{itemize}
+\item $n^{-1}V(\bm{\beta})$ is approximated by $2H^{-1}$ where $H$ is the Hessian matrix
+\item in R, a Hessian can be returned by the optimization function
+\item \begin{verbatim} est <- optim(initialParams,
+    negTwiceLogLikeFunc, NULL,
+    method="BFGS",
+    hessian=TRUE) \end{verbatim}
+\item $H_{ij} = \frac{\partial^2 \ell(\beta) }{\partial \beta_i \partial \beta_j}$ for $i,j =1,\ldots,p+q$
+\item this is only justified if you are *minimizing* $\ell(\beta) = -2\log L(\bm{\beta})$
+\item this is called the *observed* Fisher information
+\end{itemize}
+

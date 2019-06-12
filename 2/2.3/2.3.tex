@@ -1,0 +1,188 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["2.3"]{2.3: Introduction to ARMA Processes}
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+We introduce Autoregressive Moving Average Processes (ARMA) by doing some examples. Through these examples we start talking about some of the ``weird" things that can happen with these, which supports our hypothesis that time series modelling is more difficult than vanilla regression.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definition}
+
+\begin{block}{ARMA(1,1)}
+The time series $\{X_t\}$ is an {\bf ARMA(1,1)} process if it is stationary and it satisfies
+\[
+X_t - \phi X_{t-1} = Z_t + \theta Z_{t-1},
+\]
+where $\{Z_t\} \sim \text{WN}(0,\sigma^2)$ and $\phi + \theta \neq 0$
+\end{block}
+this can be written as $\phi(B)X_t = \theta(B)(Z_t)$
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Restrictions on Parameters}
+Why  $\phi + \theta \neq 0$? Say $|\phi|<1$, then
+\begin{align*}
+X_t &= \phi^{-1}(B)\theta(B)Z_t \\
+&= (1 + \phi B + \phi^2 B^2 + \phi^3B^3  + \cdots)(1 + \theta B)Z_t\\
+&= [1 + (\theta + \phi)B + (\phi\theta + \phi^2 )B^2 + (\phi^2 \theta+\phi^3)B^3\cdots]Z_t \\
+&= Z_t + \left[ (\theta + \phi)\sum_{j=1}^{\infty} \phi^{j-1} B^j \right] Z_t
+\end{align*}
+Show that if $|\phi|>1$ then
+\[
+X_t = -\theta\phi^{-1}Z_t - (\theta+\phi) \sum_{j=1}^{\infty} \phi^{-(j+1)}Z_{t+j}
+\]
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Summary and New Term}
+
+Note:
+\begin{enumerate}
+\item Stationary solution exists iff $\phi \neq \pm 1$
+\item Solution is {\bf causal} iff $|\phi| < 1$
+\item Solution is {\bf noncausal} if $|\phi|>1$
+\end{enumerate}
+
+New definition: invertibility.
+\begin{enumerate}
+\item $X_t$ is {\bf causal } if it can be written in terms of $Z_s, s \le t$
+\item $X_t$ is {\bf invertible} if $Z_t$ can be written in terms of $X_s, s \le t$
+\end{enumerate}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Invertibility Demo}
+
+ARMA(1,1) is invertible iff $|\theta|<1$.
+\begin{align*}
+Z_t &= \theta^{-1}(B)\phi(B)X_t \\
+&= (1 -\theta B + \theta^2B^2 - \theta^{3}B^3 + \cdots)(1 - \phi B) \\
+&= [1 - (\phi +\theta)B + (\theta\phi + \theta^2)B^2 + \cdots ] X_t \\
+&\vdots\\
+&= X_t - (\theta + \phi) \sum_{j=1}^{\infty} (-\theta)^{j-1}X_{t-j}
+\end{align*}
+Show if $|\theta|>1$ then it isn't invertible and  
+\[
+Z_t = -\phi \theta^{-1} X_t + (\theta + \phi) \sum_{j=1}^{\infty} (-\theta)^{-(j-1)}X_{t+j}.
+\]
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Summary}
+
+\begin{enumerate}
+\item $\phi + \theta \neq 0$
+\item Stationary solution exists iff $|\phi| \neq 1$.
+\item Solution is {\bf causal} iff $|\phi| < 1$
+\item Solution is {\bf invertible} if $|\theta| < 1$
+\end{enumerate}
+
+The errors and data are linear combinations of each other. Causal and invertible models are preferable because the alternatives don't really ``make sense," especially in the context of financial data.
+
+\end{frame}
+
+
+
+
+\end{document} 

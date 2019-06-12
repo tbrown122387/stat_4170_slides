@@ -1,0 +1,14 @@
+\frametitle{Out-of-Sample Prediction}
+
+In finance, you are usually primarily concerned with out-of-sample forecasting. Here are some things to consider:
+
+\begin{enumerate}
+\item You are always uncertain about the model (more on this next chapter)
+\item Even if you have the model right, your estimates for the parameters are random and are going to be off.
+\item Even if you have the right model and parameters, there is no reason for this to be a good model forever.
+\end{enumerate}
+
+*Theoretically* more data usually solves the first two problems. However, *in practice* more data magnifies the third problem.
+
+
+

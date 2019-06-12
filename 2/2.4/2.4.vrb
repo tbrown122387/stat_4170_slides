@@ -1,0 +1,14 @@
+\frametitle{Example}
+
+So we're interested in $\mu$. The previous theorems are useful because they tell us our estimates get very close to the true mean, but also that future average returns will be arbitrarily close to the true mean. Buying and holding is profitable if $\mu > 0$.
+\newline
+
+95\% Confidence interval:
+\begin{verbatim}
+> xbar - zAlphaOverTwo * sqrt(asympVar) #lower
+[1] -0.0273102
+> xbar + zAlphaOverTwo * sqrt(asympVar) #upper
+[1] 0.03961714
+\end{verbatim}
+
+Try different approximations for the standard deviation, try raising $\alpha$, or try lower confidence intervals.

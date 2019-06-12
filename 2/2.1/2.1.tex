@@ -1,0 +1,420 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["2.1"]{2.1: Stationary Processes: Basic Properties} 
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+Why are autocovariances and autocorrelations so important for stationary time series data? What do we use them for?
+\newline
+
+Before answering that question in this chapter, this section discusses properties of the autocovariance function, stationarity, and the options for forecasting/predicting.
+
+
+
+\end{frame}
+
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Properties of Autocovariance}
+
+All autocovariances are ``tied together" in special ways.
+\newline
+
+\begin{enumerate}
+\item $\gamma(0) \ge 0$ 
+\item for any $h$, $|\gamma(h)| \le \gamma(0)$
+\item for any $h$, $\gamma(h) = \gamma(-h)$
+\item for any $n$ and any $a_1, \ldots, a_n$, $\sum_{i=1}^n\sum_{j=1}^n a_i a_j \gamma(|i-j|) \ge 0$
+\end{enumerate}
+
+\begin{block}{Theorem}
+A real valued function $\kappa$ defined on the integers is an autocovariance function of a stationary time series if and only if it is even (3) and non-negative definite (4).
+\end{block}
+
+Show (1) and (2) are extra.
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 1}
+
+Prove that $\kappa(h) = \cos(\omega h)$ is a valid autocovariance function, where $\omega$ is any real number.
+\pause
+\newline
+
+
+This is the autocovariance function for $X_t = A \cos( \omega t ) + B \sin( \omega t)$ provided $A$ and $B$ are uncorrelated each with mean $0$ and variance $1$. It's also discussed in your homework.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 2}
+
+Prove that 
+\[
+\kappa(h) = 
+\begin{cases}
+1, h=0 \\
+\rho, h=\pm1  \\
+0, \text{else}
+\end{cases}
+\]
+is an autocovariance function for $|\rho| \le \frac{1}{2}$.
+\pause
+\newline
+
+It is the autocovariance function of $X_t = Z_t + \theta Z_{t-1}$ if $Z_t \sim \text{IID Noise}$ with variance $\sigma^2$. Notice we can only solve for $\theta$ and $\sigma^2$ when $|\rho| \le \frac{1}{2}$.
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 3}
+
+Prove that 
+\[
+\kappa(h) = 
+\begin{cases}
+1, h=0 \\
+\rho, h=\pm1  \\
+0, \text{else}
+\end{cases}
+\]
+can't be an autocovariance function for $|\rho| > \frac{1}{2}$.
+\pause
+\newline
+
+Take $\mathbf{a} = (1,-1,1,\ldots)'$. Then 
+\begin{align*}
+\sum_{i=1}^n\sum_{j=1}^n a_i a_j \kappa(|i-j|) &= \sum_{i=1}^n (\pm 1)^2 \kappa(0) + \sum_{i=1}^{n-1}(1)(-1)\rho  + \sum_{i=2}^n(1)(-1) \rho \\
+&= n - \rho(n-1) - \rho(n-1) \\
+&= n(1-2\rho) + 2\rho
+\end{align*}
+Which could be negative if $\rho > 1/2$. For the case when $\rho < 1/2$, take $\mathbf{a} = (1,1,1,\ldots)'$
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Stationarity}
+
+\begin{block}{definition}
+For $h,n \in \mathbb{Z}^+$, a {\bf strictly stationary} time series is one where
+\[
+(X_1, \ldots, X_{n})' \overset{d}{=} (X_{1+h}, \ldots, X_{n+h})'
+\]
+\end{block}
+
+\begin{block}{Necessary Properties}
+For each stationary time series:
+\begin{itemize}
+\item each $X_t$ is identically distributed
+\item $(X_t,X_{t+h})' \overset{d}{=} (X_1,X_{1+h})'$ for all $t,h$
+\item If $E[X_t^2] < \infty$ for all $t$, then the series is weakly stationary, too
+\end{itemize}
+\end{block}
+
+\begin{block}{Other Stuff}
+\begin{itemize}
+\item Weak stationarity does not imply strict stationarity
+\item IID random samples are strictly stationary (non-time series data)
+\end{itemize}
+\end{block}
+
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Stationarity: Example}
+
+Let $Z_1, Z_2, \ldots \sim \text{IID Noise}$. Prove that
+\[
+X_t = g(Z_t, Z_{t-1},\ldots, Z_{t-q})
+\]
+is (strictly) stationary, for any function $g$ (not necessarily linear)...
+\newline
+\pause
+
+Answer:
+\begin{align*}
+(X_{q+1}, \ldots, X_{q+1+n})' &= (g(Z_{q+1},\ldots, Z_{1}), \ldots, g(Z_{q+1+n},\ldots, Z_{n+1}))'\\
+&= (g(Z_{q+1+h},\ldots, Z_{1+h}), \ldots, g(Z_{q+1+n+h},\ldots, Z_{n+1+h}))' \\
+&= (X_{q+1+h}, \ldots, X_{q+1+n+h})'
+\end{align*}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Stationarity: Example}
+
+If $Z_1, Z_2, \ldots \sim \text{IID Noise}$, then 
+\[
+X_t = g(Z_t, Z_{t-1},\ldots, Z_{t-q})
+\]
+is {\bf q-dependent}. This means that $X_t$ and $X_s$ are independent if and only if $|t-s| > q$.
+\newline
+
+We say a time series $\{X_t\}$ is {\bf q-correlated} if $\gamma(h) = 0$ for $|h| > q$. This is a weaker condition.
+\newline
+
+A common class of models is when we take $g$ to be a linear combination/transformation/filter.
+
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{The Moving Average Process}
+
+\begin{block}{MA(q) Process}
+$\{X_t\}$ is a {\bf moving-average process of order q} if 
+\[
+X_t = Z_t + \theta_1 Z_{t-1} + \cdots + \theta_q Z_{t-q}
+\]
+where $\{Z_t\} \sim \text{WN}(0,\sigma^2)$, $\{\theta_i\} \in \mathbb{R}$
+\end{block}
+
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example}
+
+The definition was:
+\[
+X_t = Z_t + \theta_1 Z_{t-1} + \cdots + \theta_q Z_{t-q}
+\]
+where $\{Z_t\} \sim \text{WN}(0,\sigma^2)$, $\{\theta_i\} \in \mathbb{R}$
+\newline
+
+Prove that 
+\begin{enumerate}
+\item $\{X_t\}$ is stationary
+\item if we upgraded $\{Z_t\}$ to IID Noise, then it's strictly stationary
+\end{enumerate}
+
+Important: every stationary, mean $0$, q-correlated process is an MA(q) process.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Forecasting}
+
+Now let's discuss forecasting. What are our options?
+
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Conditional Distributions of Multivariate Normals}
+
+Assume 
+\[
+\mathbf{x} 
+= \left[\begin{array}{c}
+\mathbf{X}_1 \\
+\mathbf{X}_2
+\end{array} \right] 
+\sim \text{Normal}
+\left(
+\left[\begin{array}{c}
+\pmb{\mu}_1 \\
+\pmb{\mu}_2
+\end{array} \right],
+\left[\begin{array}{cc}
+\pmb{\Sigma_1 } & \pmb{\Sigma_{12} } \\
+\pmb{\Sigma_{21} } & \pmb{\Sigma_2 }
+\end{array}\right]
+\right)
+\]
+Then
+\[
+\mathbf{X}_1 | \mathbf{X}_2 = \mathbf{x}_2 \sim 
+\text{Normal}\left(\pmb{\mu}_1 +  \pmb{\Sigma_{12} } \pmb{\Sigma_2 }^{-1} [\mathbf{x}_2 - \pmb{\mu}_2 ],
+\pmb{\Sigma_1 } - \pmb{\Sigma_{12} }\pmb{\Sigma_2 }^{-1} \pmb{\Sigma_{21} }\right)
+\]
+In particular,  
+\begin{block}{bivariate case}
+\[
+X_1 | X_2 = x_2 \sim 
+\text{Normal}\left(\mu_1 +  \frac{\sigma_1}{\sigma_2} \rho [x_2 - \mu_2 ],
+\sigma^2_1(1 - \rho^2) \right)
+\]
+\end{block}
+where $\rho = \frac{\sigma_{1,2}}{\sqrt{\sigma_1^2 \sigma_2^2 }}$ is the correlation, not the autocorrelation.
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Watch out!}
+
+Note that the formula is different when $\rho(h) = \gamma(h)/\gamma(0)$ and we assume the time series is stationary
+\begin{block}{general bivariate case}
+\[
+X_1 | X_2 = x_2 \sim 
+\text{Normal}\left(\mu_1 +  \frac{\sigma_1}{\sigma_2} \rho [x_2 - \mu_2 ],
+\sigma^2_1(1 - \rho^2) \right)
+\]
+\end{block}
+becomes
+\begin{block}{stationary time series case}
+\[
+X_{n+h} | X_n = x_n \sim 
+\text{Normal}\left(\mu +   \rho(h) [x_n - \mu ],
+\sigma^2[1 - \rho(h)^2] \right)
+\]
+\end{block}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Two Different Questions}
+
+At time $n$ we know $X_n = x_n$. 
+\newline
+
+Whats the function (possibly nonlinear) $m(x_n)$ that minimizes
+\[
+E[(X_{n+h} - m(X_n))^2],
+\]
+or in other words, minimizes {\bf mean squared error}?
+\newline
+
+What's the best linear function $\ell(x_n) = ax_n + b$ that minimizes MSE?
+\[
+E[(X_{n+h} - aX_n - b)^2]
+\]
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Two Different Questions}
+
+If our time series $X_1, X_2, \ldots $ is jointly Normal, then $\ell() = m()$, and 
+\begin{block}{Linear Gaussian Prediction}
+\begin{eqnarray}
+\ell(X_n) = m(X_n) = E[X_{n+h}|X_n] = \mu +   \rho(h) [X_n - \mu ]
+\end{eqnarray}
+and
+\begin{align*}
+\text{MSE}[m(X_n)] &= E[(X_{n+h} - m(X_n))^2] \\
+&= E\left\{\operatorname{Var}[X_{n+1}|X_n=x_n] \right\}\\
+&= \sigma^2[1 - \rho(h)^2]. 
+\end{align*}
+\end{block}
+
+If our time series is not jointly Normal, $\ell() \neq m()$, but $\ell(X_n) = \mu +   \rho(h) [X_n - \mu ]$, still, and it has the same MSE.
+\newline
+
+\end{frame}
+
+
+\end{document} 

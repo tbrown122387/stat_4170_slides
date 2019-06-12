@@ -1,0 +1,170 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+\usepackage{amsmath, hyperref, bm}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\section{Scalar Normal Random Variables}
+
+Let $X \sim \text{Normal}(0, \sigma^2)$. Then $X^2 / \sigma^2 \sim \chi^2_1$, a ``chi-square" random variable with $1$ degree of freedom. You might recall this from a probability class: $Z = X / \sigma \sim \text{Normal}(0,1)$, a standard Normal random variable, and when you square it, it becomes a chi-square random variable. If you've taken my 3120 class, \href{http://www.people.virginia.edu/~trb5me/3120_slides/6/6.4/6.4.pdf}{this} might look familiar.
+
+\section{Multivariate Normal Random Vectors}
+
+Now let's think of $\mathbf{X}$ as an $n$ dimensional vector.  Assume that $\mathbf{X} \sim \text{Normal}(\bm{0}, \bm{\Sigma} )$. How do we standardize this into a $\mathbf{Z}$ standard Normal? Well we can do something like this
+\[
+\bm{\Sigma}^{-1/2}\mathbf{X} \sim \text{Normal}(\bm{0}, \mathbf{I}_n).
+\]
+If $\bm{\Sigma}$ is analagous to $\sigma^2$ in the univariate case, this is kind of like dividing by $\sigma$. It turns out that for legitimate covariance matrices $\bm{\Sigma}$, there always exists a square root matrix $\bm{\Sigma}^{1/2}$ such that $\bm{\Sigma} = \bm{\Sigma}^{1/2} \bm{\Sigma}^{1/2'}$, and such that $\bm{\Sigma}^{1/2}$ invertible. We call $[\bm{\Sigma}^{1/2}]^{-1} = \bm{\Sigma}^{-1/2}$.  We won't discuss the details, but these are guaranteed as long as this covariance matrix is both symmetric and positive definite.
+\newline
+
+This might be more convincing if you consider the special case where we're looking at diagonal covariance matrices:
+\[
+\bm{\Sigma} = 
+\left[\begin{array}{cccc}
+\sigma^2_1 & 0 & \cdots & 0 \\
+0 & \sigma^2_2 & \cdots & 0 \\
+\ddots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & \sigma^2_n
+\end{array}\right].
+\]
+You might guess that
+\[
+\bm{\Sigma}^{1/2} = 
+\left[\begin{array}{cccc}
+\sigma_1 & 0 & \cdots & 0 \\
+0 & \sigma_2 & \cdots & 0 \\
+\ddots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & \sigma_n
+\end{array}\right]
+\]
+and that
+\[
+\bm{\Sigma}^{-1/2} = 
+\left[\begin{array}{cccc}
+\frac{1}{\sigma_1} & 0 & \cdots & 0 \\
+0 & \frac{1}{\sigma_2} & \cdots & 0 \\
+\ddots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & \frac{1}{\sigma_n}
+\end{array}\right]
+\]
+and that
+\[
+\bm{\Sigma}^{-1} = 
+\left[\begin{array}{cccc}
+\frac{1}{\sigma^2_1} & 0 & \cdots & 0 \\
+0 & \frac{1}{\sigma^2_2} & \cdots & 0 \\
+\ddots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & \frac{1}{\sigma^2_n}
+\end{array}\right].
+\]
+And you would be correct.
+
+
+It's also important to assume that all the stanard deviations are strictly positive in the last part, otherwise we would be dividing by zero. This is related to the more general positive definite property. Also, this is just for demonstration, because these results are still true for more general covariance matrices.
+
+\section{``Squaring" Multivariate Normal Vectors}
+
+So $\bm{\Sigma}^{-1/2}X$ is a vector, and it's a standard Normal. What happens if we ``square" it? Recall that we can square vectors $\mathbf{y}$ by taking their norm, or the inner product of the vector with itself:
+\[
+\mathbf{y}'\mathbf{y} = \sum_i y_i^2
+\]
+
+So let's do that with our stanard Normal random vector:
+
+\[
+[\bm{\Sigma}^{-1/2}\mathbf{X}]' [\bm{\Sigma}^{-1/2}\mathbf{X}] = \mathbf{X} ' \bm{\Sigma}^{-1/2 '}\bm{\Sigma}^{-1/2 } \mathbf{X} = \mathbf{X} ' \bm{\Sigma}^{-1} \mathbf{X} .
+\]
+
+If we started off by assuming that $\mathbf{X} \sim \text{Normal}(\bm{\mu}, \bm{\Sigma} )$ (not mean $0$), then we could end up with the multivariate ``z-score" I was mentioning earlier in class. It turns out that this quadratic form is a chi-square random variable as well.
+
+\[
+[\mathbf{X} - \bm{\mu}] ' \bm{\Sigma}^{-1} [\mathbf{X} - \bm{\mu}]  \sim \chi^2_{n}.
+\]
+The number of degrees of freedom is the same as how long the vector is.
+
+\section{A Special Case}
+
+Consider the case where all the elements of your $\mathbf{X}$ vector are independent. Then $\bm{\Sigma}$ is diagonal again, the same as in the earlier example. And we have
+\begin{align*}
+[\mathbf{X} - \bm{\mu}] ' \bm{\Sigma}^{-1} [\mathbf{X} - \bm{\mu}] &= \sum_i \sum_j (X_i - \mu_i)(X_j - \mu_j) \bm{\Sigma}^{-1}_{i,j} \\
+&= \sum_i (X_i - \mu_i)(X_i - \mu_i) \bm{\Sigma}^{-1}_{i,i} \tag{only have to worry about diagonals of the matrix} \\
+&= \sum_i (X_i - \mu_i)(X_i - \mu_i) \frac{1}{\sigma^2_i} \\
+&= \sum_i \frac{ (X_i - \mu_i)^2 }{\sigma^2_i} 
+\end{align*}
+which might look more familiar to you. It's the sum of $n$ independent, squared standard Normal random variables. 
+
+\section{What about that result from class?}
+
+In class we had a result (that we didn't prove, but it comes from the Central Limit Theorem) that stated 
+\[
+\sqrt{n}(\hat{\bm{\phi}} - \bm{\phi}) \overset{\text{approx.}}{\sim} \text{Normal}(\bm{0}, \sigma^2 \bm{\Gamma} ^{-1}).
+\]
+This means, if we take the ``z-score",
+\begin{align*}
+[\sqrt{n}(\hat{\bm{\phi}} - \bm{\phi})]'[\sigma^2  \bm{\Gamma} ^{-1})]^{-1}  [\sqrt{n}(\hat{\bm{\phi}} - \bm{\phi})]  &= \frac{n}{\sigma^2}(\hat{\bm{\phi}} - \bm{\phi})' \bm{\Gamma} (\hat{\bm{\phi}} - \bm{\phi}) \\
+\overset{\text{approx.}}{\sim} \chi^2_p.
+\end{align*}
+Because the size of this vector is $p$. Also, you might recall that the expectation of a chi-square random variable is the same as its degrees of freedom. Then, using linearity of expectation,
+\[
+\frac{n}{\sigma^2} E\left[ (\hat{\bm{\phi}} - \bm{\phi})' \bm{\Gamma} (\hat{\bm{\phi}} - \bm{\phi}) \right] = p
+\]
+which means 
+\[
+E\left[ (\hat{\bm{\phi}} - \bm{\phi})' \bm{\Gamma} (\hat{\bm{\phi}} - \bm{\phi}) \right] = \sigma^2 \frac{p}{n}.
+\]
+
+
+
+
+
+\end{document}

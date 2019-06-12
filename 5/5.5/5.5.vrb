@@ -1,0 +1,23 @@
+\frametitle{AIC and AICc}
+
+The book mentions BIC as well, but we will not.
+Here is some R code:
+\begin{verbatim}
+> arma(xt, p = 0, q = 1)$aicc
+[1] 253.4228
+> arma(xt, p = 0, q = 2)$aicc
+[1] 229.1882
+> arma(xt, p = 1, q = 0)$aicc
+[1] 217.3914
+> arma(xt, p = 1, q = 1)$aicc #this one!
+[1] 212.7675
+> arma(xt, p = 1, q = 2)$aicc
+[1] 214.9143
+> arma(xt, p = 2, q = 0)$aicc
+[1] 213.5388
+> arma(xt, p = 2, q = 1)$aicc
+[1] 214.9269
+> arma(xt, p = 2, q = 2)$aicc
+[1] 217.083
+\end{verbatim}
+

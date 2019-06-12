@@ -1,0 +1,11 @@
+\frametitle{Example R code}
+
+\begin{verbatim}
+getMinVarPortfolio <- function(sigma){
+  n <- nrow(sigma)
+  ones <- matrix(rep(1,n), ncol=1)
+  denom <- t(ones) %*% solve(sigma) %*% ones
+  solve(sigma) %*% ones / denom[1]
+}
+\end{verbatim}
+

@@ -1,0 +1,518 @@
+
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx}
+\usepackage{bm}  % for bold greek letters
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["3.2"]{3.2: The ACF and PACF of an ARMA(p,q) Process}
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+This chapter is all about calculating the autocovariance function (ACVF) and the partial autocorrelation function (PACF) of *causal* ARMA processes.
+\newline
+
+% The causal assumption will play a big part. We will always be able to write $\phi(B)X_t = \theta(B)Z_t$ as
+% \[
+% X_t = \frac{\theta(B) }{\phi(B)}Z_t = \sum_{j=0}^{\infty} \psi_j Z_{t-j}.
+% \]
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{First Method for Calculation of ACVF}
+
+Write the model in it's MA($\infty$) representation, and use the theorem we already have.
+\newline
+
+\[
+\phi(B)X_t = \theta(B)Z_t
+\]
+becomes
+\[
+X_t = \sum_{j=0}^{\infty}\psi_jZ_{t-j}
+\]
+where $\psi(z) = \sum_{i=0}^{\infty} \psi_jz^j =  \theta(z)/\phi(z)$ for any $|z|\le 1$ (because causality).
+\newline
+
+Then
+\[
+\gamma(h) = \sigma^2\sum_{j=0}^{\infty}\psi_j \psi_{j+|h|},
+\]
+by theorem in section 2.2 (with $\text{Var}(Z_t) = \sigma^2$) .
+
+
+
+
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 3.2.1}
+
+Consider a general ARMA(1,1). Let $Z_t \sim \text{WN}(0,\sigma^2)$
+\[
+X_t - \phi X_{t-1} = Z_t + \theta Z_{t-1}
+\]
+
+\begin{align*}
+\gamma(0) &= \sigma^2\sum_{j=0}^{\infty} \psi_j^2 \\
+&= \sigma^2\left[1 + (\theta + \phi)^2\sum_{j=0}^{\infty}\phi^{2j}\right] \\
+&= \sigma^2\left[ 1 + \frac{(\theta+\phi)^2 }{1 - \phi^2 } \right]
+\end{align*}
+
+\begin{block}{Hint}
+In section 2.3 we found that for $j \ge 1$, $\psi_j = (\theta+\phi)\phi^{j-1}$
+\end{block}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 3.2.1}
+
+Now find the lag-1 autocovariance for this ARMA(1,1), with $Z_t \sim \text{WN}(0,\sigma^2)$
+\[
+X_t - \phi X_{t-1} = Z_t + \theta Z_{t-1}
+\]
+
+\begin{align*}
+\gamma(1) &= \sigma^2\sum_{j=0}^{\infty} \psi_j\psi_{j+1} \\
+&= \sigma^2 \left[\psi_0 \psi_1 + \sum_{j=1}^{\infty}\psi_j\psi_{j+1}\right] \\
+&= \sigma^2\left[\theta + \phi + (\theta + \phi)^2\phi \sum_{j=0}^{\infty}\phi^{2j} \right]  \\
+&= \sigma^2\left[ \theta + \phi + \frac{(\theta+\phi)^2\phi }{1 - \phi^2 } \right]
+\end{align*}
+
+$\psi_j = (\theta+\phi)\phi^{j-1}, j \ge 1$
+% Also, $\gamma(h) = \phi^{h-1}\gamma(1)$, $h\ge 2$. We can see that if we plot $\gamma$, it ``tails off."
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 3.2.1}
+
+Now find the lag-1 autocovariance for this ARMA(1,1), where $Z_t \sim \text{WN}(0,\sigma^2)$
+\[
+X_t - \phi X_{t-1} = Z_t + \theta Z_{t-1}
+\]
+
+If we plot $\gamma$, it ``tails off." For $h \ge 2$
+\begin{align*}
+\gamma(h) &= \sigma^2\sum_{j=0}^{\infty} \psi_j\psi_{j+h} \\
+&= \sigma^2 \left[ \psi_{h} + \sum_{j=1}^{\infty}\psi_j\psi_{j+h}\right] \\
+&= \sigma^2 \left[(\theta+\phi)\phi^{h-1} + \sum_{j=1}^{\infty}(\theta+\phi)^2\phi^{2j+h-2} \right] \\
+&= \phi^{h-1}\gamma(1)
+\end{align*}
+
+$\psi_j = (\theta+\phi)\phi^{j-1}, j \ge 1$
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 3.2.2}
+
+Let $\{Z_t\} \sim \text{WN}(0, \sigma^2)$. Consider the MA(q) model:
+\[
+X_t = Z_t + \theta_1 Z_{t-1} + \cdots + \theta_q Z_{t-q}
+\]
+
+On the other hand, ACVFs for MA processes cut off abruptly
+\begin{align*}
+\gamma(h) &= \sigma^2\sum_{j=0}^{\infty} \psi_j \psi_{j+|h|} \\
+&= \sigma^2\sum_{j=0}^{\infty} \theta_j\theta_{j+|h|} \\
+&= \sigma^2 \sum_{j=0}^{q - |h|}\theta_j\theta_{j+|h|}
+\end{align*}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Second Method for Calculation of ACVF}
+
+Multiply both sides of an ARMA(p,q) model by $X_{t-k} = \sum_{j=0}^{\infty}\psi_j Z_{t-j-k}$:
+\begin{align*}
+X_t X_{t-k} - \phi_1 X_{t-1}X_{t-k} - \cdots - \phi_pX_{t-p}X_{t-k} &= \left[\sum_{l=0}^q \theta_l Z_{t-l}\right]\left[\sum_{j=0}^{\infty}\psi_j Z_{t-j-k} \right]
+\end{align*}
+Then take expectations. Note that $\psi_j = 0$ for $j < 0$ and $\theta_l = 0$ for $l \not \in \{0,1,\ldots,q\}$. 
+\begin{block}{Method 2}
+Solve the following $p+1$ equations for $\gamma(0), \gamma(1), \ldots, \gamma(p)$:
+%You get these $p+1$ equations
+\[
+\gamma(k) - \phi_1 \gamma(k-1) - \cdots - \phi_p\gamma(k-p) = \sigma^2 \sum_{j=0}^{q-k}\theta_{k+j}\psi_j
+\]
+for $0 \le k \le p$. The right hand side may be $0$ for some $k$. Higher order autocovariances are also obtainable with the same formula.
+
+%$0 \le k < \text{max}(p,q+1)$ or
+% \[
+% \gamma(k) - \phi_1 \gamma(k-1) - \cdots - \phi_p\gamma(k-p) = 0
+% \]
+% if $k \ge \text{max}(p,q+1)$ %($0$ on RHS because $l > q$).
+\end{block}
+\end{frame}
+
+% %----------------------------------------------------------------------------------------
+% 
+% \begin{frame}
+% \frametitle{Second Method for Calculation of ACVF}
+% 
+% You can solve these equations in two different ways. Either you can use the theory of linear difference equations (we won't use this as much in this class), or you can just solve them algebraically.
+% 
+% \end{frame}
+
+% %----------------------------------------------------------------------------------------
+% 
+% \begin{frame}
+% \frametitle{Example 3.2.3}
+% 
+% Consider the general ARMA(1,1) from slide 4. We showed $\psi_j = (\theta + \phi) \phi^{j-1}$ for $j \ge 1$.
+% \newline
+% 
+% Method 2 gives us
+% \begin{enumerate}
+% \item $\gamma(0) - \phi \gamma(1) = \sigma^2[1 + \theta_1 (\theta + \phi)]$
+% \item $\gamma(1) - \phi \gamma(0) = \sigma^2[\theta]$
+% \item $\gamma(k) - \phi \gamma(k-1) = 0$ for $k \ge 2$
+% \end{enumerate}
+% 
+% The solution to (3) is $\gamma(h)= \alpha \phi^h$ (homogeneous linear difference equations). Plug this into (1) and (2) and confirm it's the same answer from slides 4 and 5.
+% \end{frame}
+
+% %----------------------------------------------------------------------------------------
+% 
+% \begin{frame}
+% \frametitle{Example 3.2.3}
+% 
+% Consider the causal AR(2) process (written in a suggstive form)
+% \[
+% (1- \xi_1^{-1}B)(1 - \xi_2^{-1}B) X_t = Z_t
+% \]
+% with $|\xi_1| > 1$ and $|\xi_2| > 1$, and $\xi_1 \neq \xi_2$
+% 
+% 
+% \end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 3.2.5 (example 3.2.3 revisited)}
+
+Consider the ARMA(1,1) from examples 3.2.1 and 3.2.3. Method 3 starts us off with:
+\begin{enumerate}
+\item $\gamma(0) - \phi \gamma(1) = \sigma^2[1 + \theta (\theta + \phi)]$
+\item $\gamma(1) - \phi \gamma(0) = \sigma^2[\theta]$
+\item $\gamma(k) - \phi \gamma(k-1) = 0$ for $k \ge 2$
+\end{enumerate}
+Plugging (2) into (1) gives us
+\[
+\gamma(0) = \sigma^2\left[ 1 + \frac{(\theta+\phi)^2 }{1 - \phi^2 } \right]
+\]
+(which is the same as before) and plugging this into (2) gives us
+\[
+\gamma(1) = \sigma^2\left[ \theta + \phi + \frac{(\theta+\phi)^2\phi }{1 - \phi^2 } \right].
+\]
+For any other lag we can use (3).
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Example 3.2.5 (example 3.2.3 revisited)}
+
+We can check our work with R. For more details see the code file.
+
+\begin{verbatim}
+ARMAacf(ar = c(testPhi), ma = c(testTheta))
+\end{verbatim}
+
+\end{frame}
+
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Autocorrelation (ACF)}
+
+Finding the ACF from the ACVF (both sample and population acf) is easy:
+\[
+\rho(h) = \frac{\gamma(h)}{\gamma(0)}
+\]
+and
+\[
+\hat{\rho}(h) = \frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}
+\]
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Partial Autocorrelation}
+
+Motivation: knowing that the ACF of an MA model cuts off at $q$ is fantastic. This is because identifying the order of an MA model with sample ACFs is easy. Just find the highest nonzero lag.  
+\newline
+
+Too bad ACFs don't exhibit this. But they do when you look at the *partial* autocorrelation function (PACF). The PACF for a pure AR model will cut off right at $p$, telling us exactly which model we need. 
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Partial Autocorrelation}
+
+PACF is denoted by $\alpha(h)$ where $h$ is the lag. It gives us partial correlations. This means it gives us the correlation ``controlling" for other variables. 
+\newline
+
+The ACF never controlled for anything in between.
+% \newline
+% 
+% For some $h$, find the coefficients from 
+% \[
+% X_h = \phi_{h1}X_{h-1} + \cdots + \phi_{hh}X_0
+% \]
+% and then we only use the last coefficient:
+% 
+% \[
+% \alpha(h) = \phi_{hh}.
+% \]
+
+
+
+
+\end{frame}
+
+
+% %----------------------------------------------------------------------------------------
+% 
+% \begin{frame}
+% \frametitle{Partial Autocorrelation}
+% 
+% 
+% It can be shown that 
+% \[
+% \alpha(h) = \operatorname{Corr}[X_h - P(X_h|X_1,\ldots, X_{h-1} ),  X_0 - P(X_0|X_1,\ldots, X_{h-1} )].
+% \]
+% So $h$ still denotes the lag, but now we're ``taking into account" the variables in between.
+% 
+% 
+% \end{frame}
+% 
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Partial Autocorrelation}
+
+PACF can be calculated with the prediction equations we used in chapter 2.5. Say we want to find $\alpha(h)$.
+We find the coefficients that best predict $X_{t+h}$ in terms of $X_{t+h-1},\ldots,X_t$. The last coefficient takes into account the intermediate variables, and ``controls" for them, and so is the same as the PACF for this particular lag.
+\[
+\hat{X}_{t+h} = \phi_{h1} X_{t+h-1} + \cdots +  \phi_{hh} X_{t}
+\]
+
+% We minimize the mean squared error by setting the derivatives equal to zero, yielding for $j=1,\ldots,h$
+% \[
+% E[\{X_{t+h} - (\phi_{h1} X_{t+h-1} + \cdots +  \phi_{hh} X_{t})\}X_{t+h-j}] = 0
+% \]
+% or
+% \[
+% \gamma(j) = \phi_{h1}\gamma(j-1) + \cdots + \phi_{hh} \gamma(j-h)
+% \]
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{The Return of the Prediction Equations}
+
+For $j=1,\ldots,h$ we showed $\gamma(j) = \phi_{h1}\gamma(j-1) + \cdots \phi_{hh} \gamma(j-h)$. We can rewrite this as 
+\[
+\left[ \begin{array}{c}
+\gamma(1) \\
+\gamma(2) \\
+\vdots \\
+\gamma(h)
+\end{array}\right]
+=
+\Gamma_h
+\left[ \begin{array}{c}
+\phi_{h1} \\
+\phi_{h2} \\
+\vdots \\
+\phi_{hh}
+\end{array}\right]
+\]
+where $\Gamma_h = [\gamma(i-j)]_{i,j=1}^h$. 
+\newline
+
+So $\phi_{hh}$ is the last component of $\Gamma_h^{-1} \bm{\gamma}_h$ where $\bm{\gamma}_h$ is the LHS. If we divide both sides of that equation by $\gamma(0)$, we can write everything in terms of autocorrelations. We do that procedure over and over again for each $h$!
+
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Partial Autocorrelation Example: AR(p) models}
+
+I mention again that the notation for best prediction coefficients is suggestive. These two sets of $\bm{\phi}$ are not the same. However, often times some elements are equal. 
+\newline
+
+Model:
+\[
+X_t = \phi_1 X_{t-1} + \cdots + \phi_p X_{t-p} + Z_t, \hspace{10mm} \{Z_t\} \sim WN(0, \sigma^2)
+\]
+Prediction equations for $\alpha(h)$. 
+\[
+\hat{X}_t = \phi_{h1}X_{t-1} + \cdots + \phi_{hh}X_{t-h}
+\]
+
+$\alpha(h) = \phi_h$ if $h \le p$. Otherwise $\alpha(h) = 0$. This follows from homework problem 2.15 in your last homework. It's also a new homework question!
+\end{frame}
+
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Partial Autocorrelation}
+
+Checking our answers is possible for finding PACFs, too. We can use the same function as before to compute theorertical PACFs:
+
+\begin{verbatim}
+ARMAacf(ar = c(testPhi), ma = c(testTheta), pacf = TRUE)
+\end{verbatim}
+
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Partial Autocorrelation}
+
+What about sample PACF? We just use the last equation and put hats on everything (we use the sample autocorrelation)
+
+\begin{enumerate}
+\item $\alpha(0) = 1$
+\item $\hat{\alpha}(h) = \hat{\phi}_{hh}$
+\end{enumerate}
+where $\hat{\phi}_{hh}$ is the last component of 
+\[
+\hat{\bm{\phi}} = \hat{\Gamma}_h^{-1} \hat{\bm{\gamma}}_h
+\]
+
+\begin{verbatim}
+# see code file for more
+pacf(rets)
+\end{verbatim}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Partial Autocorrelation}
+
+There might be a more useful model selection strategy than just checking where you think the ACF and PACF cut off. For example, if the true model is not a pure MA or AR, then this ``finding cutoffs" strategy is useless. 
+\newline
+
+Now you have the computational tools to plot sample *and* theoretical ACFs and PACFS. Try more sophisticated strategies to match them up and pick a better model!
+
+\end{frame}
+
+\end{document} 

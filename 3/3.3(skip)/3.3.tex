@@ -1,0 +1,140 @@
+
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx}
+\usepackage{bm}  % for bold greek letters
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["3.3"]{3.3: Forecasting ARMA Processes}
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+I PLAN ON SKIPPING THIS SECTION.
+\end{frame}
+
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{}
+
+Assume $p,q \ge 1$. Consider the transformation of $\phi(B)X_t = \theta(B)X_t$. 
+
+\[
+W_t = 
+\begin{cases} 
+  \sigma^{-1}X_t & t \in \{1, \ldots, \max(p,q) \} \\
+  \sigma^{-1}\phi(B)X_t & t > \max(p,q) 
+\end{cases}
+\]
+
+We apply the Innovations Algorithm to this.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{}
+
+\[
+W_t = 
+\begin{cases} 
+  \sigma^{-1}X_t & t \in \{1, \ldots, \max(p,q) \} \\
+  \sigma^{-1}\phi(B)X_t & t > \max(p,q) 
+\end{cases}
+\]
+The autocovariances of $W_t$ are 
+\[
+\kappa(i,j) = 
+\begin{cases} 
+  \sigma^{-2}\gamma_X(i-j) & 1 \le i,j \le \max(p,q) \} \\
+  \sigma^{-1}\phi(B)X_t & t > \max(p,q) 
+\end{cases}
+\]
+
+
+\end{frame}
+
+
+
+\end{document} 

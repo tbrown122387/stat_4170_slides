@@ -1,0 +1,338 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx, bm}
+\usepackage{dirtytalk} % quote thing
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["8.2"]{8.2: Second-Order Properties of Multivariate Time Series Examples}
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+We analyze vector-valued time series from a second-order point of view.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 8.2.1}
+
+Let's focus on stationary time series.  Recall the autocovariance function: $\Gamma(h) = E[(\mathbf{X}_{t+h} - \bm{\mu})(\mathbf{X}_t - \bm{\mu})']$ 
+
+\[
+\left[\begin{array}{c}
+X_{t,1} \\
+X_{t,2}
+\end{array}\right]
+=
+\left[\begin{array}{c}
+Z_{t} \\
+Z_{t}
+\end{array}\right]
++
+\left[\begin{array}{c}
+0 \\
+.75 Z_{t-10}
+\end{array}\right]
+\]
+
+\begin{enumerate}
+\item $\Gamma(-10)=$?
+\item $\Gamma(0)=$?
+\item $\Gamma(10)=$?
+\end{enumerate}
+\pause
+
+\begin{align*}
+\Gamma(-10) &= 
+\left[\begin{array}{cc}
+0 & .75 \\
+0 & .75
+\end{array}\right]\\
+\Gamma(0) &= 
+\left[\begin{array}{cc}
+1 & 1 \\
+1 & 1.5625
+\end{array}\right] \\
+\Gamma(10) &= 
+\left[\begin{array}{cc}
+0 & 0 \\
+.75 & .75
+\end{array}\right]
+\end{align*}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 8.2.1}
+\[
+\left[\begin{array}{c}
+X_{t,1} \\
+X_{t,2}
+\end{array}\right]
+=
+\left[\begin{array}{c}
+Z_{t} \\
+Z_{t}
+\end{array}\right]
++
+\left[\begin{array}{c}
+0 \\
+.75 Z_{t-10}
+\end{array}\right]
+\]
+
+\begin{enumerate}
+\item $R(-10)=$?
+\item $R(0)=$?
+\item $R(10)=$?
+\end{enumerate}
+\begin{align*}
+\Gamma(-10) &= 
+\left[\begin{array}{cc}
+0 & .75 \\
+0 & .75
+\end{array}\right]\\
+\Gamma(0) &= 
+\left[\begin{array}{cc}
+1 & 1 \\
+1 & 1.5625
+\end{array}\right] \\
+\Gamma(10) &= 
+\left[\begin{array}{cc}
+0 & 0 \\
+.75 & .75
+\end{array}\right]
+\end{align*}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 8.2.1}
+\[
+\left[\begin{array}{c}
+X_{t,1} \\
+X_{t,2}
+\end{array}\right]
+=
+\left[\begin{array}{c}
+Z_{t} \\
+Z_{t}
+\end{array}\right]
++
+\left[\begin{array}{c}
+0 \\
+.75 Z_{t-10}
+\end{array}\right]
+\]
+
+\begin{enumerate}
+\item $R(-10)=$?
+\item $R(0)=$?
+\item $R(10)=$?
+\end{enumerate}
+
+
+\begin{align*}
+\Gamma(-10) = 
+\left[\begin{array}{cc}
+0 & .75 \\
+0 & .75
+\end{array}\right] & \hspace{10mm} R(-10) = 
+\left[\begin{array}{cc}
+0 & .6 \\
+0 & .48
+\end{array}\right]\\
+\Gamma(0) = 
+\left[\begin{array}{cc}
+1 & 1 \\
+1 & 1.5625
+\end{array}\right] & \hspace{10mm} R(0) = 
+\left[\begin{array}{cc}
+1 & .8 \\
+.8 & 1
+\end{array}\right]  \\
+\Gamma(10) = 
+\left[\begin{array}{cc}
+0 & 0 \\
+.75 & .75
+\end{array}\right] & \hspace{10mm} R(-10) = 
+\left[\begin{array}{cc}
+0 & 0 \\
+.6 & .48
+\end{array}\right]
+\end{align*}
+
+
+
+
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{The Autocovariance Function}
+
+
+\begin{block}{Basic Properties of $\Gamma$}
+\begin{enumerate}
+\item $\Gamma(h) = \Gamma'(-h)$
+\item for all $i,j$, $|\gamma_{ij}(h)| \le \sqrt{\gamma_{ii}(0)\gamma_{jji}(0)}$ 
+\item $\gamma_{ii}(h)$ is element $i$'s autocovariance function
+\item $\sum_{j=1}^n\sum_{k=1}^n \mathbf{a}_j' \Gamma(j-k) \mathbf{a}_k \ge 0$
+\end{enumerate}
+\end{block}
+Try proving these.
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Vector-valued noise}
+
+\begin{block}{White Noise}
+The $m$-variate series $\{\mathbf{Z}_t\}$ is {\bf white noise with mean $0$ and covariance matrix $\Sigma$}, written
+\[
+\{\mathbf{Z}_t\} \sim WN(\mathbf{0},\Sigma),
+\]
+if $\{\mathbf{Z}_t\}$ is stationary with mean vector $\mathbf{0}$ and covariance matrix function
+\[
+\Gamma(h) = 
+\begin{cases}
+\Sigma, & h=0 \\
+\mathbf{0}, & \text{otherwise}.
+\end{cases}
+\]
+\end{block}
+\begin{block}{IID Noise}
+The $m$-variate series $\{\mathbf{Z}_t\}$ is {\bf iid noise with mean $0$ and covariance matrix $\Sigma$}, written
+\[
+\{\mathbf{Z}_t\} \sim iid(\mathbf{0},\Sigma),
+\]
+if $\{\mathbf{Z}_t\}$ are independent and identically distributed with mean vector $\mathbf{0}$ and covariance matrix $\Sigma$.
+\end{block}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{More definitions}
+
+\begin{block}{linear process}
+The m-variate series $\{\mathbf{X}_t\}$ is a {\bf linear process} if it has the representation
+\[
+\mathbf{X}_t = \sum_{j=-\infty}^{\infty}C_j \mathbf{Z}_{t-j}, \hspace{10mm} \{\mathbf{Z}_t\} \sim WN(\mathbf{0},\Sigma)
+\]
+where $\{C_j\}$ is a sequence of matrices whose components are absolutely summable.
+\end{block}
+
+This is stationary and has covariance matrix function 
+\[
+\Gamma(h) = \sum_{j=-\infty}^{\infty}C_{j+h}\Sigma C_j'.
+\]
+(This is a HW question)
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{MA($\infty$)}
+
+\begin{block}{MA($\infty$) process}
+An MA($\infty$) process is a linear process with $C_j = 0$ for $j < 0$.
+
+\[
+\mathbf{X}_t = \sum_{j=0}^{\infty}C_j \mathbf{Z}_{t-j}, \hspace{10mm} \{\mathbf{Z}_t\} \sim WN(\mathbf{0},\Sigma)
+\]
+
+\end{block}
+
+\end{frame}
+
+
+
+
+\end{document} 

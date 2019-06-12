@@ -1,0 +1,265 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx, bm}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["6.5"]{6.5: Seasonal ARIMA Models} 
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+These are useful when you have a seasonal component of period $s$.
+\newline
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definition}
+
+\begin{block}{SARIMA(p,d,q)$\times$(P,D,Q)$_s$}
+If $d$ and $D$ are nonnegative integers, then $\{X_t\}$ is a {\bf seasonal ARIMA(p,d,q)(P,D,Q) process with period $s$} if the differenced series $Y_t = (1-B)^d(1-B^s)^DX_t $ is a causal ARMA process defined by
+\[
+\phi(B)\Phi(B^s)Y_t = \theta(B) \Theta(B^s)Z_t, \hspace{10mm} \{Z_t\} \sim WN(0,\sigma^2),
+\]
+where $\phi(z) = 1 - \phi_1 z - \cdots - \phi_p z^p$, $\Phi(z) = 1 - \Phi_1 z - \cdots - \Phi_P z^P$, $\theta(z) = 1 + \theta_1 z + \cdots + \theta_q z^q$, $\Theta(z) = 1 + \Theta_1 z + \cdots \Theta_Q z^Q$.
+
+\end{block}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Note}
+
+\begin{block}{Quote From Book}
+In Section 1.5 we discussed the classical decomposition model incorporating trend, seasonality, and random noise, namely, 
+\[
+X_t = m_t + s_t + Y_t .
+\]
+In modeling real data it might not be reasonable to assume, as in the classical decomposition model, that the seasonal component $s_t$ repeats itself precisely in the same way cycle after cycle. Seasonal ARIMA models allow for randomness in the seasonal pattern from one cycle to the next."
+\end{block}
+
+\end{frame}
+
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 1}
+\[
+\phi(B)\Phi(B^s)Y_t = \theta(B) \Theta(B^s)Z_t
+\]
+\[
+X_t = U_t - .4 U_{t-12}
+\]
+
+Q: What are $p,d,q,P,D,Q,s$?
+\newline
+\pause
+
+A: 
+\begin{itemize}
+\item $p=0$
+\item $q=0$
+\item $d=0$
+\item $P=0$
+\item $D=0$
+\item $Q=1$
+\item $s=12$
+\end{itemize}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 1}
+\[
+\phi(B)\Phi(B^s)Y_t = \theta(B) \Theta(B^s)Z_t
+\]
+\[
+X_t - .7 X_{t-12} = U_t
+\]
+
+Q: What are $p,d,q,P,D,Q,s$?
+\newline
+\pause
+
+A: 
+\begin{itemize}
+\item $p=0$
+\item $q=0$
+\item $d=0$
+\item $P=1$
+\item $D=0$
+\item $Q=0$
+\item $s=12$
+\end{itemize}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 1}
+\[
+\phi(B)\Phi(B^s)Y_t = \theta(B) \Theta(B^s)Z_t
+\]
+\[
+X_t = U_t - .4 U_{t-12}
+\]
+
+Q: What is the ACF?
+\newline
+\pause
+
+\[
+\rho(\pm 12) = \frac{ \gamma(12) }{\gamma(0) } = \frac{-.4 \sigma^2 }{\sigma^2(1 + .4^2) } = -.4/(1+.4^2).
+\]
+And it equals zero everywhere else (besides at $1$).
+
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 2}
+\[
+\phi(B)\Phi(B^s)Y_t = \theta(B) \Theta(B^s)Z_t
+\]
+\[
+X_t - .7 X_{t-12} = U_t
+\]
+
+Q: What is the ACF?
+\newline
+\pause
+
+For $k \ge 1$, 
+\[
+\gamma(12k) = \text{Cov}(X_{t+12k},X_t) = \text{Cov}(.7 X_{t+12(k-1)},X_t) = .7 \gamma(12(k-1))
+\]
+So 
+\[
+\rho(12k) = .7\rho(12[k-1])
+\]
+as well.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 3}
+
+Consider the model
+\[
+(1-\phi B)(1- \Phi B^{12})X_t = Z_t.
+\]
+This can be rewritten as 
+\[
+X_t =  \phi X_{t-1}  +\Phi X_{t-12} - \phi \Phi X_{t-13} = Z_t.
+\]
+This is an AR(13) model where a lot of the coefficients are $0$, and you're only estimating three parameters.
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Identification by Hand}
+
+The book suggests:
+\begin{enumerate}
+\item first find $d,D,s$ so that $(1-B)^d(1-B^s)^DX_t$ is stationary
+\item then look at ACF and PACF, and look out for significant bumps at lags of multiple $s$
+\end{enumerate}
+
+AICc works, too. But you should try to narrow it down to a few models by hand, first.
+\newline
+
+See code file for example.
+\end{frame}
+
+\end{document} 

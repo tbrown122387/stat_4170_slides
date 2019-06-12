@@ -1,0 +1,160 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx, bm}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["6.1"]{6.1: ARIMA models for nonstationary series} 
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+This chapter is all about putting the ``I" in ARIMA. 
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definition}
+
+\begin{block}{definition}
+If $d$ is a nonnegative integer, then $\{X_t\}$ is an {\bf ARIMA(p,d,q) process } if $Y_t = (1-B)^dX_t$ is a causal ARMA(p,q) process.
+\end{block}
+
+\begin{enumerate}
+\item $X_t$ now has $d$ unit roots: it satisfies $\phi^*(B)X_t = \phi(B)(1-B)^d X_t = \theta(B)Z_t $
+\item We've been doing this already when we difference our log-prices
+\end{enumerate}
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Explanation}
+
+``I" stands for integrated (summed) because 
+\[
+X_t = X_0 + \sum_{j=1}^t Y_j
+\]
+where each $Y_j$ is from some stationary ARMA process. Clearly
+\[
+Y_t = (1-B)X_t 
+\]
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Mean versus Intercept}
+
+Writing the intercept or mean terms can be done in two different ways. Make sure you know what your software is giving you.
+\newline
+
+The equation
+\[
+\phi(B)(1-B)^d(X_t - \mu t^d / d!) = \theta(B)Z_t
+\]
+is the same as 
+\[
+\phi(B)(1-B)^dX_t = c + \theta(B)Z_t.
+\]
+
+What's $EX_t$? What about $\mu$. What is $c$?
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{A Common Bug}
+
+\begin{block}{Warning!}
+By default, stats::arima() does not include a mean term when you fit ARIMA models. forecast::Arima() does. Make sure you are not forcing your expected returns to be $0$. Fore more information, see 6.1.R
+\end{block}
+
+
+\end{frame}
+
+
+
+
+
+\end{document} 

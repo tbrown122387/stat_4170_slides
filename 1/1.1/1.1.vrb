@@ -1,0 +1,21 @@
+\frametitle{Try Running the R Code!}
+
+\begin{verbatim}
+# 1.1
+# Author: Taylor
+# STAT 4170
+
+# import data #
+# change this depending on your computer
+setwd("~/UVa/all_teaching/4170_data/")
+wineData <- read.csv("wine.csv", header=F)
+colnames(wineData) <- c("wine")
+
+# plot #
+plot(wineData$wine, col="blue",type="l", xlab = "time",
+                                ylab = "wine sales")
+time <- 1:(nrow(wineData))
+points(time, wineData$wine)
+
+\end{verbatim}
+

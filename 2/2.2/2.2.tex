@@ -1,0 +1,360 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["2.2"]{2.2: Linear Processes}
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+Linear processes is a class that's larger than ARMA models. Knowing these well is essential to doing time series analysis. Later we'll talk about Wold's Decomposition, which says that every second-order stationary process is either a linear process or can be transformed to a linear process by subtracting a deterministic component.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definition}
+
+\begin{block}{Linear Time Series}
+The time series $\{X_t\}$ is a {\bf Linear Process} if it has the representation
+\[
+X_t = \sum_{j=-\infty}^{\infty} \psi_j Z_{t-j},
+\]
+for all $t \in \mathbb{Z}$, where $Z_t \sim \text{WN}(0,\sigma^2)$, and $\{\psi_j\}$ is a sequence of constants such that $\sum_{j=-\infty}^{\infty}|\psi_j| < \infty$ (i.e. they're absolutely summable)
+\end{block}
+
+Sometimes we write this more concisely as 
+\[
+X_t = \psi(B) Z_t = \left( \sum_{j=-\infty}^{\infty} \psi_j B^j \right) Z_t.
+\]
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 1}
+
+Some Linear Processes aren't always useful in finance. We don't always want to study models where $X_t$ depends on future noise $Z_{t+j}$. 
+\newline
+\pause
+
+Show how to write down the subset of these models where all future $\psi_j$ coefficients are set to $0$. Show that it is reasonable to call this class of models an MA($\infty$) process.
+\newline
+\pause
+
+\[
+X_t = (\cdots+ 0 B^{-1} +  \psi_0 B^{0} + \psi_j B^1 + \cdots) Z_t = \sum_{j=0}^{\infty} \psi_j Z_{t-j}
+\]
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 2}
+
+Show that absolute summability ($\sum_{j=-\infty}^{\infty}|\psi_j| < \infty$) guarantees that $\sum_{j=-n}^n \psi_j Z_{t-j}$ converges in mean square as $n \to \infty$. We only have to show Cauchy convergence!
+\newline
+
+\begin{align*}
+E\left[\left|\sum_{j=-n}^n \psi_j Z_{t-j} -  \sum_{j=-m}^{m} \psi_j Z_{t-j} \right| \right] &= E\left[ \left|\sum_{m < |j| \le n} \psi_j Z_{t-j} \right| \right]\\
+&\le E\left[ \sum_{m < |j| \le n} |\psi_j  Z_{t-j} | \right] \tag{tri-ineq.} \\
+&= E[|Z_t|] \sum_{m < |j| \le n} |\psi_j| \\
+&\to 0
+\end{align*}
+as $n > m \to \infty$
+\end{frame}
+
+
+% %----------------------------------------------------------------------------------------
+% 
+% \begin{frame}
+% \frametitle{Example 2}
+% 
+% Show that absolute summability ($\sum_{j=-\infty}^{\infty}|\psi_j| < \infty$) guarantees $E[|X_t|]$ exists (is finite) as long as $E[|Z_t|] < \infty$.
+% \newline
+% 
+% \begin{align*}
+% E[|X_t|] &= E\left[\left| \sum_{j=-\infty}^{\infty} \psi_j Z_{t-j} \right| \right] \\
+% &\le E\left[\sum_{j=-\infty}^{\infty} |\psi_j Z_{t-j}| \right] \tag{triangle inequality} \\
+% &= \sum_{j=-\infty}^{\infty} |\psi_j| E |Z_{t-j}|  \tag{*}\\
+% &< \infty
+% \end{align*}
+% 
+% \end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 3}
+
+The space of all stationary time series is closed under taking these type of linear filters.
+
+\begin{block}{Theorem}
+Let $X_t$ be stationary with mean $0$ and have ACVF $\gamma_X(\cdot)$. Also let $\sum_{j=-\infty}^{\infty} |\psi_j| < \infty$. Then 
+\[
+Y_t = \sum_{j=-\infty}^{\infty} \psi_j X_{t-j}
+\]
+is stationary with mean $0$ and has ACVF
+\[
+\gamma_Y(h) = \sum_{j=-\infty}^{\infty}\sum_{k=-\infty}^{\infty} \psi_j\psi_k \gamma_X(h+j-k)
+\]
+\end{block}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Proof}
+
+% First, the new mean still exists (is finite).
+% \[
+% E|Y_t| = E\left|\sum_{j=-\infty}^{\infty} \psi_j X_{t-j}\right| \le \sum_{j=-\infty}^{\infty} |\psi_j| E|X_{t-j}| = \mu \sum_{j=-\infty}^{\infty} |\psi_j| < \infty
+% \]
+
+New mean in terms of the old mean:
+\[
+E[Y_t] = E\left[\sum_{j=-\infty}^{\infty} \psi_j X_{t-j}\right] = \sum_{j=-\infty}^{\infty} \psi_j E[X_{t-j}] = 0.
+\]
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Proof}
+
+The new covariance function exists (check) and is equal to:
+\begin{align*}
+\gamma_Y(h) &= \text{Cov}\left[\sum_{j=-\infty}^{\infty} \psi_j X_{t-j}, \sum_{k=-\infty}^{\infty} \psi_k X_{t+h-k}  \right]  \\
+&=  \sum_{j=-\infty}^{\infty}\sum_{k=-\infty}^{\infty} \psi_j\psi_k \text{Cov}\left[ X_{t-j} X_{t+h-k} \right] \tag{*} \\
+&= \sum_{j=-\infty}^{\infty}\sum_{k=-\infty}^{\infty} \psi_j\psi_k \gamma_X(h+j-k)
+\end{align*}
+
+Special case: $X_t$ is white noise. Non-zero covariance terms when $-j = h-k$! Show that we would get $\gamma_Y(h) = \gamma_X(0) \sum_{j \in \mathbb{Z}} \psi_j \psi_{j+h}$.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Successive Filtering}
+
+From $\{Y_t\}$, to $\{X_t\}$, to $\{W_t\}$. First
+\[
+X_t = \alpha(B)Y_t = \sum_{j=-\infty}^{\infty} \alpha_j Y_{t-j},
+\]
+then we apply another filter
+\[
+W_t = \beta(B)X_t = \sum_{k=-\infty}^{\infty} \beta_k X_{t-k}
+\]
+It's easiest to just treat these as polynomials:
+\[
+W_t = \sum_{i=-\infty}^{\infty} \psi_i Y_{t-i} = \beta(B)\alpha(B)Y_t = \alpha(B)\beta(B) Y_t.
+\]
+Show $\psi_i = \sum_j \alpha_j \beta_{i-j}$
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+Why do we worry about infinite filters? We never have an infinitely large dataset, so why do we have to prove things about what happens when we do?
+\newline
+
+Sometimes it's beneficial to write certain models in this expanded way. Take for example the AR(1) model we learned earlier
+\[
+X_t - \phi X_{t-1} = Z_t
+\]
+where $|\phi| < 1$ and $\{Z_t\}$ is white noise. We can re-write it as
+\[
+X_t = \sum_{j=0}^{\infty} \phi^j Z_{t-j}.
+\]
+
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+$\{Z_t\}$ is white noise. We can re-write it as
+\[
+X_t = \sum_{j=0}^{\infty} \phi^j Z_{t-j}
+\]
+Notice the coefficients are absolutely summable (because $|\phi| < 1$), and by the previous theorem
+\[
+\gamma_X(h) = \sum_{j=0}^{\infty}\phi^j\phi^{j+h} \sigma^2 = \sigma^2\phi^h \sum_{j=0}^{\infty}\phi^{2j} = \frac{\sigma^2\phi^h}{1-\phi^2}
+\]
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Causality}
+
+What if $|\phi|>1$ for an AR(1)? Then $X_t$ is not {\bf causal} or {\bf future-independent}. Let's start by rewriting our AR(1) as
+\[
+- \phi X_{t} = Z_{t+1} - X_{t+1} 
+\]
+becomes
+\begin{align*}
+X_t &= -\phi^{-1}Z_{t+1} + \phi^{-1} X_{t+1} \\
+&=  -\phi^{-1}Z_{t+1} + \phi^{-1} [-\phi^{-1}Z_{t+2} + \phi^{-1} X_{t+2} ] \\
+&\vdots \\
+&= -\sum_{j=1}^{\infty} \phi^{-j} Z_{t+j}.
+\end{align*}
+This sum converges (because $|\phi^{-1}| < 1$), however the terms are in the future.
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Unit Roots}
+
+What if $|\phi|=1$? Then $X_t$ is not even stationary! This is a homework question.
+\newline
+
+We will generalize these results to more arbitary processes that have more complicated sets of coefficients.
+
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+% \begin{frame}
+% \frametitle{Nota Bene}
+% 
+% When we write down $\sum_{j=-\infty}^{\infty}\psi_j X_{t-j}$, we should really write it down as
+% \[
+% \lim_{n \to \infty} \sum_{j=-n}^{n}\psi_j X_{t-j}.
+% \]
+% 
+% If we're being technical, we need to show that this random variable ``exists." We need to show that 
+% \begin{enumerate}
+% \item It gets really close to a random variable
+% \item The random variable it gets close to has finite mean (and variance usually)
+% \end{enumerate}
+% 
+% \end{frame}
+% 
+% 
+% %----------------------------------------------------------------------------------------
+% 
+% \begin{frame}
+% \frametitle{Motivation}
+% 
+% How do we know 
+% \[
+% X_t = \sum_{j=0}^{\infty} \phi^j Z_{t-j}
+% \]
+% and
+% \[
+% X_t - \phi X_{t-1} = Z_t
+% \]
+% are the same? 
+% \newline
+% 
+% Usually this is proved by showing $\sum_{j=0}^{n} \phi^j Z_{t-j} \overset{m.s.}{\to} X_t$ as $n \to \infty$(limits are unique)
+% \end{frame}
+% 
+% %----------------------------------------------------------------------------------------
+% 
+% \begin{frame}
+% \frametitle{Motivation}
+% 
+% \begin{align*}
+% E\left[ \left| X_t - \sum_{j=0}^{n} \phi^j Z_{t-j} \right|\right] &= 
+% \end{align*}
+% 
+% \end{frame}
+
+
+
+
+%Note $(1)$ and the first step use linearity, but also (stated without proof) the fact that the coefficients are absolutely summable.
+
+\end{document} 

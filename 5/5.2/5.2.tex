@@ -1,0 +1,268 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx}
+\usepackage{bm}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["5.2"]{5.2: Maximum Likelihood Estimation} 
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Maximum Likelihood Estimation}
+
+We now assume further that our time series is a Multivariate Normal random vector. Now that we have a specific probability density to work with, we can talk about maximizing a likelihood. There is not always a closed form solution for this task, so we may have to use an iterative scheme (e.g. Newton-Raphson, gradient descent, etc.). In the previous chapter, the techniques we learned about fell under the heading of ``Preliminary Estimation" because they can provide us with starting parameter values for an iterative scheme. 
+
+\end{frame}
+%----------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Maximum Likelihood Estimation}
+Let $\mathbf{X}_n = (X_1, \ldots, X_n)'$ be the vector of our zero-mean univariate time series. Let $\Gamma_n = E[\mathbf{X}_n\mathbf{X}_n']$ be the covariance matrix for this random vector. Our likelihood is
+\[
+L(\Gamma_n) = (2\pi)^{-n/2}(\det \Gamma_n)^{-1/2} \exp\left(-\frac{1}{2} \mathbf{X}_n' \Gamma_n^{-1} \mathbf{X}_n \right).
+\]
+
+Evaluating this (or the log of this) may be difficult for long time series (large $n$) because we have to invert and find the determinant of a very large covariance matrix. 
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Maximum Likelihood Estimation}
+
+Solution: instead of looking at the density for the data, make a transformation and look at the density for the innovations. Recall from 2.5.4 that 
+\[
+\mathbf{X}_n = \mathbf{C}_n (\mathbf{X}_n - \mathbf{\hat{X}_n} ) = \mathbf{C}_n \mathbf{U}_n.
+\]
+$\mathbf{C}_n$ was lower-diagonal with $1$s on the diagonal. Also recall the transformation theorem from STAT 3120 (I drop the bold face):
+\begin{align*}
+f_{U_n}(u_n) &= f_{X_n}(x_n[u_n]) \left|\det C_n  \right| \\
+&= (2\pi)^{-n/2}(\det \Gamma_n)^{-1/2} \exp\left(-\frac{1}{2} U_n' C_n' \Gamma_n^{-1} C_n U_n \right)\left|\det C_n  \right|\\
+&= (2\pi)^{-n/2}(v_0\cdots v_{n-1})^{-1/2}\exp\left(-\frac{1}{2}U_n'D_n^{-1}U_n \right)
+\end{align*}
+Where $D_n = \text{diag}(v_0,\ldots,v_{n-1})$. 
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Maximum Likelihood Estimation}
+
+The likelihood factors up into pieces, so it's usually calculated with the innovations algorithm
+\begin{align*}
+L(\bm{\phi},\bm{\theta}, \sigma^2 ) &= (2\pi)^{-n/2}(v_0\cdots v_{n-1})^{-1/2}\exp\left(-\frac{1}{2}U_n'D_n^{-1}U_n \right)\\
+&= \frac{1}{\sqrt{ (2 \pi \sigma^2)^n  r_0 r_1 \cdots r_{n-1}}} \exp\left\{-\frac{1}{2\sigma^2}\sum_{j=1}^n\frac{ (X_j - \hat{X}_j)^2 }{r_{j-1} }  \right\}\\
+&= \prod_{j=1}^{n}\left[ (2 \pi \sigma^2 r_{j-1} )^{-1/2} \exp\left\{-\frac{1}{2\sigma^2} \frac{(X_{j} - \hat{X}_j)^2}{r_{j-1} } \right\}\right]
+\end{align*}
+where $\sigma^2 r_j = v_j$.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Maximum Likelihood Estimation}
+
+A homework question: take the partial derivative of the log-likelihood $\ell(\bm{\phi},\bm{\theta}) $, set it equal to $0$, and deduce that:
+\begin{block}{MLE}
+\[
+\hat{\sigma}^2=  n^{-1}S(\hat{\bm{\phi}},\hat{\bm{\theta}})
+\]
+is the estimate for $\sigma^2$, where $S(\hat{\bm{\phi}},\hat{\bm{\theta}}) = \sum_{j=1}^n\frac{ (X_j - \hat{X}_j)^2 }{r_{j-1} } $, and the estimators $\hat{\bm{\phi}}$ and $\hat{\bm{\theta}}$ are the minimizers of
+\[
+\ell(\bm{\phi},\bm{\theta}) = \ln(n^{-1}S(\bm{\phi}, \bm{\theta})) + n^{-1}\sum_{j=1}^n\ln r_{j-1} .
+\]
+
+\end{block}
+PS: this technique is sometimes called using a ``profile" or ``concentrated" log-likelihood.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Maximum Likelihood Estimation}
+
+As we mentioned earlier, minimization of $\ell(\bm{\phi},\bm{\theta})$ is sometimes accomplished numerically. What this means is that the statistician first picks an initial set of values for the parameters (using a technique from the previous section is advised). Then the procedure will revise these parameters over and over again. The parameters get ``better and better" in the sense that every subsequent evaluation of the likelihood will be bigger and bigger with these new parameters. The algorithm stops when the likelihood no longer improves. 
+\newline
+
+The specifics of these optimization algorithms will not be discussed further in this class. 
+
+
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Least Squares Estimation}
+
+\begin{block}{Least Squares}
+The least squares estimates $\tilde{\bm{\phi}}, \tilde{\bm{\theta}}$ for $\bm{\phi},\bm{\theta}$ are obtained by minimizing 
+\[
+S(\hat{\bm{\phi}},\hat{\bm{\theta}}) = \sum_{j=1}^n\frac{ (X_j - \hat{X}_j)^2 }{r_{j-1} }.
+\]
+This ignores the other part of the likelihood, which does involve $\bm{\phi},\bm{\theta}$. 
+\end{block}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Model Selection with AICC}
+
+How do we pick which model to fit? That is, how do we pick $p$ and $q$? Introducing the corrected Akaike Information Criterion:
+
+\begin{block}{AICC Criterion}
+Choose $p$, $q$, $\phi_p$, $\theta_q$ to minimize
+\[
+- 2 \ln L(\bm{\phi}_p,\bm{\theta}_q ) + 2 (p + q + 1)n/(n-p-q-2).
+\]
+\end{block}
+
+\begin{itemize}
+\item $2 (p + q + 1)n/(n-p-q-2)$ is the penalty portion for large $p$ and $q$.
+\item This is discussed further in 5.5
+\end{itemize}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Confidence Intervals}
+
+The MLE for $\bm{\beta} = (\phi_1,\ldots,\phi_p,\theta_1,\ldots,\theta_q)' $ is asymptotically normal.
+\begin{block}{MLE Sampling Distribution}
+\[
+\hat{\bm{\beta}} \overset{\text{approx.}}{\sim} \text{Normal}(\bm{\beta}, n^{-1}V(\bm{\beta})).
+\]
+\end{block}
+\begin{itemize}
+\item $ (\hat{\bm{\beta}} - \bm{\beta})'n V^{-1} (\bm{\beta})(\hat{\bm{\beta}} - \bm{\beta}) \sim \chi^2_{p+q}$
+\item This is good for confidence intervals and hypothesis testing.
+\end{itemize}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Confidence Intervals}
+
+\begin{block}{From last slide}
+\[
+\hat{\bm{\beta}} \overset{\text{approx.}}{\sim} \text{Normal}(\bm{\beta}, n^{-1}V(\bm{\beta})).
+\]
+\[
+n(\hat{\bm{\beta}} - \bm{\beta})'V^{-1} (\bm{\beta})(\hat{\bm{\beta}} - \bm{\beta}) \sim \chi^2_{p+q}
+\]
+\end{block}
+
+
+\begin{enumerate}
+\item confidence intervals and hypothesis tests for individual $\beta$ elements are easy
+\item $\left\{ \bm{\beta} : n (\hat{\bm{\beta}} - \bm{\beta})' V^{-1} (\bm{\beta})(\hat{\bm{\beta}} - \bm{\beta}) \le \chi^2_{p+q,\alpha} \right\}$ is a confidence ellipsoid
+\end{enumerate}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Confidence Intervals}
+
+\begin{block}{MLE Sampling Distribution}
+\[
+\hat{\bm{\beta}} \overset{\text{approx.}}{\sim} \text{Normal}(\bm{\beta}, n^{-1}V(\bm{\beta})).
+\]
+\end{block}
+\begin{itemize}
+\item $n^{-1}V(\bm{\beta})$ is approximated by $2H^{-1}$ where $H$ is the Hessian matrix 
+\item in R, a Hessian can be returned by the optimization function
+\item \begin{verbatim} est <- optim(initialParams, 
+    negTwiceLogLikeFunc, NULL, 
+    method="BFGS", 
+    hessian=TRUE) \end{verbatim} 
+\item $H_{ij} = \frac{\partial^2 \ell(\beta) }{\partial \beta_i \partial \beta_j}$ for $i,j =1,\ldots,p+q$
+\item this is only justified if you are *minimizing* $\ell(\beta) = -2\log L(\bm{\beta})$
+\item this is called the *observed* Fisher information
+\end{itemize}
+
+\end{frame}
+
+
+
+\end{document} 

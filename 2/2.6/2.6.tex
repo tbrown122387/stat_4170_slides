@@ -1,0 +1,220 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["2.6"]{2.6: The Wold Decomposition}
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+The Wold Decomposition tells us that any stationary time series can be broken up into a deterministic part and a linear process (like an ARMA process).
+
+In a sense, this justifies what we were doing in the first chapter: ARMA models are good for the non-deterministic part.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definition}
+
+A {\bf deterministic} process is one that has no prediction error. In other words, $X_t = \tilde{P}_{t-1}X_t$.
+\newline
+
+Example 1: $X_t = A \cos(\omega t) + B \sin(\omega t)$, where $\omega \in (0,\pi)$, and $A$ and $B$ are uncorrelated but have mean $0$ and variance $\sigma^2$. 
+\newline
+
+Example 2: $X_t = A + b t$
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definition}
+
+\begin{enumerate}
+\item $X_t = A \cos(\omega t) + B \sin(\omega t)$ 
+\item $X_t = A + b t$
+\end{enumerate}
+It's easier to see if you write the difference equations. There's no noise!
+\newline
+
+Example 1: 
+\begin{align*}
+X_t &= [2 \cos(\omega)] X_{t-1} - X_{t-2} & \tag{trig identities}\\
+&= \tilde{P}_{t-1} X_t.
+\end{align*}
+
+Example 2: 
+\begin{align*}
+X_t &= X_t - X_{t-1} +X_{t-1} \\
+&= b + X_{t-1}
+&= \tilde{P}_{t-1} X_t.
+\end{align*}
+
+\end{frame}
+
+
+% %----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Notation}
+
+Two potentially confusing things in this chapter:
+\newline
+
+Here $\tilde{P}$ denotes the prediction operator for a time series with an infinite past. We skipped this section. Don't worry about the slight difference between this and $P_{t-1}$. 
+\newline
+
+Also, deterministic does not mean non-random! This can be seen from the last two examples.
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Theorem}
+
+\begin{block}{The Wold Decomposition}
+If $\{X_t\}$ is a nondeterministic stationary time series, then it can be written as
+\[
+X_t = \sum_{j=0}^{\infty}\psi_j Z_{t-j} + V_t
+\]
+where
+\begin{itemize}
+\item $\psi_0 = 1$ and $\sum_{j=0}^{\infty}\psi_j^2 < \infty$
+\item $\{Z_t\} \sim \text{WN}(0,\sigma^2)$
+\item $\text{Cov}(Z_s,V_t) = 0$ for all $s$ and $t$
+\item $Z_t = \tilde{P}_t Z_t$ for all $t$ (invertibility)
+\item $V_t = \tilde{P}_s V_t$ for all $s$ and $t$ 
+\item $\{V_t\}$ is deterministic.
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 1}
+
+Is the following stationary? What are the deterministic and non-deterministic pieces?
+\begin{align*}
+Y_t &= A\cos(\omega t) + B \sin(\omega t) + X_t\\
+\phi(B) X_t &= \theta(B) Z_t
+\end{align*}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 2}
+
+Is the following stationary? What are the deterministic and non-deterministic pieces?
+\begin{align*}
+Y_t &= \sum_i \left[ A_i \cos(\omega_i t) + B_i \sin(\omega_i t) \right]+ X_t\\
+\phi(B) X_t &= \theta(B) Z_t
+\end{align*}
+
+
+\end{frame}
+
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 3}
+
+
+Is the following stationary? What are the deterministic and non-deterministic pieces?
+
+\[
+Y_t = \beta_0 + \beta_1 x_t + \epsilon_t
+\]
+\[
+\phi(B) \epsilon_t = \theta(B) Z_t
+\]
+\end{frame}
+
+
+\end{document} 

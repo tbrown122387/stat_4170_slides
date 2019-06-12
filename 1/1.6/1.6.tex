@@ -1,0 +1,204 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx}
+
+\newcommand{\verbatimfont}[1]{\renewcommand{\verbatim@font}{\ttfamily#1}} % small verbatim
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["1.6"]{1.6: Testing the Estimated Noise Sequence} 
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+Sometimes modelling a time series is as simple as fitting a regression model. For example, we took the log of the adjusted-closing prices of GE stock, and regressed that on $(1, t)$. 
+\newline
+
+Modelling a time series may or may not be the same as this, however. In regression classes you assume all of the errors are IID noise. In a time series class, we have a stationary process modelling the noise terms. This is more general--IID noise was just one example of all the other stationary processes we looked at (AR, MA, etc.).
+\newline
+
+Given a set of {\bf residuals}, we need to be able to test them if they have non-trivial structure. If they do have structure, we can't use regular regression! If they don't, then regression will suffice. Finding out that there is structure is the same as finding out there is more predictability in a series.
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Test 1: Eyeballing it}
+
+Let $Y_1, \ldots, Y_n$ be your time series of residuals. If $n$ is large, then approximately:
+\[
+\hat{\rho}_X(1), \hat{\rho}_X(2), \ldots, \hat{\rho}_X(h) \overset{iid}{\sim} \text{Normal}\left(0,\frac{1}{n}\right) 
+\]
+under the null hypothesis of IID noise.
+\newline
+
+The band plotted on autocorrelation plots represents the shared confidence interval $\pm 1.96\sqrt{\frac{1}{n}}$. $95$\% of these sample autocorrelations should be within these bands.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Test 2: Portmanteau Tests}
+
+If $n$ is large, under the null hypothesis of iid noise, then approximately:
+\begin{enumerate}
+\item ``Box-Pierce": $Q = n\sum_{j=1}^h \hat{\rho}^2_j \sim \chi^2_{h}$
+\item ``Ljung-Box": $Q_{\text{LB}} = n(n+2)\sum_{j=1}^h \hat{\rho}^2(j)/(n-j) \sim \chi^2_{h}$
+\end{enumerate}
+
+\begin{verbatim}
+h <- 4
+Box.test(residuals, lag=h, type="Box-Pierce") 
+Box.test(residuals, lag=h, type="Ljung-Box") 
+\end{verbatim}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Test 3: Turning Point Test}
+
+For residuals $y_1, \ldots, y_n$, $1 < i < n$ is a turning point if 
+\[
+y_{i-1} < y_{i} \text{ and } y_i > y_{i+1}
+\]
+or
+\[
+y_{i-1} > y_{i} \text{ and } y_i < y_{i+1}.
+\]
+
+Let $T$ be the number of turning points. For large $n$, if the null is true
+\[
+T \sim \text{Normal}\left(\frac{2(n-2)}{3}, \frac{16n-29}{90} \right)
+\]
+Reject if too small or too large. See code for implementation.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Test 4: The Difference-Sign Test}
+
+For residuals $y_1, \ldots, y_n$, $1 < i <= n$, let $S$ denote the number of times that 
+\[
+y_i - y_{i-1} > 0.
+\]
+
+For large $n$, under the null hypothesis of iid noise, it is approximately true that
+\[
+S \sim \text{Normal}((n-1)/2, (n+1)/12).
+\]
+
+\begin{verbatim}
+library(randtests)
+difference.sign.test(residuals, alternative = "two.sided")
+\end{verbatim}
+
+What are some situations where this will give you false negatives?
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Test 5: The Rank Test}
+
+For residuals $y_1, \ldots, y_n$, let $P$ denote the number of pairs $(i,j)$ that 
+\[
+y_i < y_{j},
+\]
+with $1 \le i < n$ and $i < j$.
+\newline
+
+For large $n$, under the null hypothesis of iid noise, it is approximately true that
+\[
+P \sim \text{Normal}\left( \frac{n(n-1)}{4}, \frac{n(n-1)(2n+5)}{72} \right).
+\]
+
+\begin{verbatim}
+library(randtests)
+rank.test(coredata(residuals), alternative = "two.sided")
+\end{verbatim}
+\end{frame}
+
+\end{document} 

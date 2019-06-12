@@ -1,0 +1,16 @@
+\frametitle{Example 7.2.2}
+
+Another example ARIMA(1,1) + GARCH(1,1):
+\[
+X_t - \mu = \phi(X_{t-1} - \mu) + Z_t + \theta Z_{t-1}
+\]
+\[
+Z_t = \sqrt{h_{t}}e_t
+\]
+\[
+h_t = \alpha_0 + \alpha_1 Z_{t-1}^2 + \beta_1 h_{t-1}
+\]
+
+\includegraphics[width=55mm]{/home/taylor/UVa/all_teaching/4170_slides/7/pics/Rplot11.png}
+\includegraphics[width=55mm]{/home/taylor/UVa/all_teaching/4170_slides/7/pics/Rplot12.png}
+

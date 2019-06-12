@@ -1,0 +1,176 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["7.1"]{7.1: Historical Overview} 
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definitions}
+
+\begin{itemize}
+\item $P_t$: the closing price on day/week/month $t$ of stock/stock index
+\item $X_t = \log P_t$: log-price...observed paths look very much like those of a random walk 
+\item $Z_t = \triangledown X_t$: the log return
+\item $100 Z_t$: percentage returns
+\item $h_t = \text{Var}(Z_t|Z_{1:t-1})$ : the conditional variance aka volatility
+\end{itemize}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+$Z_t$ sometimes looks roughly stationary. The ACF rarely gives any clear or consistent ARMA model recommendations. Also, if we fit some ARMA model, $h_t$ is independent of $t$ and independent of $Z_{1:t-1}$\footnote{homework question}. This assumption is often violated.
+\newline
+
+We would like models that take into account stylized features that appear such as {\bf tail-heaviness, asymmetry, volatility clustering and serial dependence without correlation}. We introduce AutoRegressive Conditional Heteroscedasticity (ARCH) models, Generalized AutoRegressive Conditional Heteroscedasticity (GARCH), and stochastic volatility (SVOL) models in the next slide.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definitions}
+
+\begin{block}{ARCH(p)}
+\begin{align*}
+Z_t &= \sqrt{h_t}e_t, \hspace{10mm} \{e_t\} \sim IID(0,1) \\
+h_t &= \alpha_0 + \sum_{i=1}^p \alpha_i Z^2_{t-i}.
+\end{align*}
+$\alpha_0 > 0$, $a_i \ge 0$, $p \in \mathbb{N}$
+\end{block}
+
+\begin{itemize}
+\item volatility increases if we have observed big movements
+\item setting $a_i$ to $0$ gives us white noise model
+\item $\{e_t\}$ is sometimes but not always assumed to be Normal
+\end{itemize}
+
+\end{frame}
+
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definitions}
+
+\begin{block}{GARCH(p,q)}
+\begin{align*}
+Z_t &= \sqrt{h_t}e_t, \hspace{10mm} \{e_t\} \sim IID(0,1) \\
+h_t &= \alpha_0 + \sum_{i=1}^p \alpha_i Z^2_{t-i} + \sum_{j=1}^q \beta_j h_{t-j}.
+\end{align*}
+$\alpha_0 > 0$, $a_i \ge 0$, $\beta_j \ge 0$, $p \in \mathbb{N}$
+\end{block}
+
+\begin{itemize}
+\item now volatility is a function of its own past values, in addition to the past observations
+\item $\{e_t\}$ may or may not be normal
+\end{itemize}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definitions}
+
+\begin{block}{SVOL}
+\begin{align*}
+Z_t &= \sqrt{h_t}e_t, \hspace{10mm} \{e_t\} \sim IID(0,1) \\
+\ln h_t &= \gamma_0 + \gamma_1 \ln h_{t-1} + \eta_t, \hspace{10mm} \{\eta_t\} \sim IID(0,\sigma^2). 
+\end{align*}
+where $\{\eta_t\}$ and $\{e_t\}$ are independent.
+\end{block}
+
+\begin{itemize}
+\item log-volatility is an AR(1) process. 
+\item $\gamma_1$ is usually around $.95$.
+\item more difficult to estimate (can't even evaluate likelihood)
+\end{itemize}
+
+
+\end{frame}
+
+\end{document} 

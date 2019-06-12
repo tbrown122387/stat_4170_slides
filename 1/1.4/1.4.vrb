@@ -1,0 +1,9 @@
+\frametitle{Test Yourself 3}
+
+Answer: MA(1) with Gaussian Noise
+\begin{verbatim}
+fakeData3 <- arima.sim(list(ma=c(-.9)), n = 200)
+plot(fakeData3, type = "b")
+acf(fakeData3)
+\end{verbatim}
+

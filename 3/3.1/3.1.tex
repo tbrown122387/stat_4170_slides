@@ -1,0 +1,495 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["3.1"]{3.1: ARMA(p,q) models} 
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+We extend ARMA models in this chapter.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definitions}
+
+\begin{block}{ARMA(p,q) process}
+$\{X_t\}$ is an ARMA(p,q) process if $\{X_t\}$ is stationary and if for every $t$,
+\[
+X_t - \phi_1 X_{t-1} - \cdots - \phi_p X_{t-p} = Z_t + \theta_1 Z_{t-1} + \cdots + \theta_q Z_{t-q}
+\]
+where $\{Z_t\} \sim \text{WN}(0,\sigma^2)$ and the polynomials $\phi(z) = (1 - \phi_1 z - \cdots - \phi_p z^p)$ and $\theta(z) = (1 + \theta_1 z  + \cdots + \theta_qz^q)$ have no common factors.
+\end{block}
+
+\begin{enumerate}
+\item $X_t$ is an ARMA(p,q) with mean $\mu$ if we replace the above $X_t$ with $X_t - \mu$
+\item Easier to write $\phi(B)X_t = \theta(B)Z_t$ 
+\item AR(p) if $\theta(z) = 1$
+\item MA(q) if $\phi(z) = 1$
+\end{enumerate}
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{From Old to New}
+
+If we learn a little about complex numbers, we can start stating these parameter restrictions in terms of the argument to these polynomials, $z = a+bi$. This helps us because we're starting to deal with more parameters now, and because it's more common in practice. Recall $|z|^2 = z \bar{z} = a^2 + b^2$.
+\newline
+
+Before, in 2.3: $(1-\phi_1 z)$ was our AR(1) polynomial. Setting it equal to zero yields
+\[
+1 = \phi_1 z_1 \iff \phi_1 = 1/z_1 \iff z_1 = 1/\phi_1
+\]
+where $z_1$ is the root (there's only one and it's real in this case). 
+\newline
+
+The backshift operator becomes a complex number. Stationary solutions exist if and only if $\phi_1 \neq \pm 1$. Stated in terms of $z$ now $(1 - \phi_1 z) \neq 0$ when $|z| = \pm 1$. Why the $| \cdot |$? When we have higher order AR models, the roots are often complex.
+\newline
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Complex Polynomials}
+
+Every degree $p$ polynomial $\phi(z)$ can be factored into 
+\begin{align*}
+\phi(z) &= 1 + \phi_1 z + \cdots \phi_p z^p \\
+&= \phi_p(z - z_1)(z - z_2)\cdots(z-z_p).
+\end{align*}
+Because the coefficients $\phi_1, \ldots, \phi_p$ are real numbers, all of these roots $z_1,\ldots, z_p$, even though they are written in terms of our coefficients, are real or complex pairs.
+\newline
+
+Example:
+\begin{align*}
+\phi(z) &= 2 z^3 + 0z^2 + z + 0 \\
+&= 2[z^3 + 0z^2 + \frac{1}{2}z + 0]  \\
+&= 2(z-0)(z-\sqrt{-1/2})(z+\sqrt{-1/2}) \\
+\end{align*}
+Number of roots matches the degree of polynomial. One complex pair of roots, and one real root. $z_1 = 0$, $z_2 = \sqrt{-1/2}$ and $z_3 = -\sqrt{-1/2}$.
+
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Unit Roots}
+
+Stationarity from last chapter: $(1 - \phi z) \neq 0$ when $|z| = \pm 1$
+\newline
+
+For higher order AR models, the analagous situation is that $\phi(z)$ has no ``unit roots." That is, a stationary ARMA solution exists if and only if $\phi(z) = (1 - \phi_1 z - \cdots \phi_p z^p) \neq 0$ for $|z| = \pm 1$. 
+\newline
+
+Whenever you plug in a $z$ that lies on the unit circle in the complex plane, the polynomial will not be equal to $0$. Our definition of ARMA requires this because we want to divide both sides by $\phi(z)$. No unit roots implies that 
+\[
+\frac{1}{\phi(z)} = \sum_{j=-\infty}^{\infty}\chi_j z^j
+\]
+and $\sum_{j=-\infty}^{\infty}|\chi_j| < \infty$ for $1 - \delta < |z| < 1 + \delta$ with some $\delta > 0$ 
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Causality $\to$ Stationarity }
+
+\[
+\frac{1}{\phi(z)} = \sum_{j=-\infty}^{\infty}\chi_j z^j
+\]
+and $\sum_{j=-\infty}^{\infty}|\chi_j| < \infty$ for $1 - \delta < |z| < 1 + \delta$ with some $\delta > 0$
+\newline
+
+This is a fancy way of saying we can divide both sides of the equation by $\phi(B)$ to isolate $X_t$ on the left hand side.
+\newline
+
+Notice this doesn't guarantee that it's causal. For that we need to further restrict the roots to lie outside the unit circle. 
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Lemmas}
+\begin{block}{stationarity}
+A stationary solution of $\{X_t\}$ exists and is unique if and only if $|z| = 1$ implies
+\[
+\phi(z) = 1 - \phi_1 z - \phi_2 z^2 - \cdots - \phi_pz^p \neq 0.
+\]
+\end{block}
+
+\begin{block}{causality}
+An ARMA(p,q) process $\{X_t\}$ is {\bf causal} if and only if $|z| \le 1$ implies
+\[
+\phi(z) = 1 - \phi_1 z - \phi_2 z^2 - \cdots - \phi_pz^p \neq 0.
+\]
+\end{block}
+\begin{block}{causality 2}
+An ARMA(p,q) process $\{X_t\}$ is {\bf causal} if and only if there exist $\{\psi_j\}$ such that $\sum_{j=-\infty}^{\infty}|\psi_j| < \infty$ and $X_t = \sum_{j=0}^{\infty} \psi_j Z_{t-j} \text{ for all $t$}$
+\end{block}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Example 3.1.1}
+Consider the ARMA(1,1) model 
+\[
+X_t - .5 X_{t-1} = Z_t + .4 Z_{t-1}
+\]
+Is it stationary? Is it causal?
+\pause
+\newline
+
+We don't care about the MA part for this.
+\[
+1 - .5 z_1 = 0 \iff z_1 = 1/.5 \iff z_1 = 2
+\]
+$|2| \neq 0$ so a stationary solution exists. $|2| > 0$ so it is also causal. 
+
+\begin{verbatim}
+polyroot(c(1, -.5))
+\end{verbatim}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Invertibility}
+
+Invertibility involves the same math with complex polynomials, but only concerns $\theta(z)$.
+\newline
+
+\begin{block}{invertibility}
+An ARMA(p,q) process is $\{X_t\}$ is {\bf invertible} if and only if there exist constants $\{\pi_j\}$ such that $\sum_{j=0}^{\infty}|\pi_j| < \infty$ and 
+\[
+Z_t = \sum_{j=0}^{\infty}\pi_j X_{t-j}.
+\]
+\end{block}
+\begin{block}{invertibility 2}
+An ARMA(p,q) process is $\{X_t\}$ is {\bf invertible} if and only if $|z| \le 1$ implies
+\[
+\theta(z) = 1 + \theta_1 z + \cdots + \theta_q z^q \neq 0.
+\]
+\end{block}
+
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Back to Example 3.1.1}
+Consider the ARMA(1,1) model 
+\[
+X_t - .5 X_{t-1} = Z_t + .4 Z_{t-1}
+\]
+Is it invertible?
+\pause
+\newline
+
+We don't care about the AR part for this.
+\[
+1 + .4 z_1 = 0 \iff z_1 = -1/.4 \iff z_1 = -2.5
+\]
+$|-2.5| > 0$ so it is invertible! 
+
+\begin{verbatim}
+polyroot(c(1,.4))
+\end{verbatim}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Back to Example 3.1.1}
+Consider the ARMA(1,1) model 
+\[
+X_t - .5 X_{t-1} = Z_t + .4 Z_{t-1}
+\]
+find $\psi(z)$ and $\pi(z)$.
+\pause
+\newline
+
+$\chi(z)$ is the reciprocal of $\phi(z)$ iff
+\begin{align*}
+(1 + \chi_1 z + \chi_2 z^2 + \cdots)(1 - .5z) &= 1\\
+1 + z(-.5 + \chi_1) + z^2(- \chi_1 .5 + \chi_2) + \cdots &= 1 + 0z + 0 z^2 + \cdots
+\end{align*}
+So $\chi_1 = 2^{-1}$, $\chi_2 = 2^{-2}, \ldots$
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Back to Example 3.1.1}
+Consider the ARMA(1,1) model 
+\[
+X_t - .5 X_{t-1} = Z_t + .4 Z_{t-1}
+\]
+
+Now that we have the reciprocal, we can multiply both sides by it
+\begin{align*}
+\psi(z) = \chi(z)\theta(z) &= (1 + z/2 + z^2/4 + \cdots)(1 + .4z) \\
+&= 1 + z(.4 + .5) + z^2(.4\cdot.5+.5^2) + \cdots
+\end{align*}
+
+So 
+\[
+X_t = \sum_{j=0}^{\infty}\psi_j Z_{t-j} 
+\]
+where $\psi_0 = 1$, $\psi_1 = .4 + .5$, $\psi_2 = .5(.4 + .5)$, $\psi_3 = .5^2(.4 + .5)$, $\ldots$
+\newline
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Back to Example 3.1.1}
+
+Checking our answers:
+\[
+X_t - .5 X_{t-1} = Z_t + .4 Z_{t-1}
+\]
+\[
+X_t = \sum_{j=0}^{\infty}\psi_j Z_{t-j} 
+\]
+where $\psi_0 = 1$, $\psi_1 = .4 + .5$, $\psi_2 = .5(.4 + .5)$, $\psi_3 = .5^2(.4 + .5)$, $\ldots$
+\newline
+
+This function ignores the $1$s. Also be careful about the signs of the coefficients!
+\begin{verbatim}
+ARMAtoMA(ar=c(.5), ma=c(.4), lag.max=3)
+\end{verbatim}
+
+\end{frame}
+
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Back to Example 3.1.1}
+Consider the ARMA(1,1) model 
+\[
+X_t - .5 X_{t-1} = Z_t + .4 Z_{t-1}
+\]
+
+$\xi(z)$ is the reciprocal of $\theta(z)$ iff
+\begin{align*}
+\xi(z)\theta(z) &= 1  \\
+(1 + \xi_1 z + \xi_2 z^2 + \cdots)(1 + .4 z) &= 1  + 0z + 0z^2 + \cdots\\
+1 + z(.4 + \xi_1) + z^2 ( \xi_1 .4 + \xi_2) + z^3(.4 \xi_2 + \xi_3) + \cdots &= 1+ 0z + 0z^2 + \cdots
+\end{align*}
+
+So $\xi_0 = 1$, $\xi_1 = - .4$, $\xi_2 = .4^2$, $\xi_3 = -.4^3, \ldots$
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Back to Example 3.1.1}
+Consider the ARMA(1,1) model 
+\[
+X_t - .5 X_{t-1} = Z_t + .4 Z_{t-1}
+\]
+
+Now that we have the reciprocal, we can multiply both sides by it
+\begin{align*}
+\pi(z) = \xi(z)\phi(z) &= (1 + -.4z + .4^2 z + \cdots)(1 - .5z) \\
+&= 1 + z(-.4 - .5) + z^2(.5\cdot.4+.4^2) + \cdots
+\end{align*}
+
+So 
+\[
+Z_t = \sum_{j=0}^{\infty}\pi_j X_{t-j} 
+\]
+where $\pi_0 = 1$, $\pi_1 = -(.4 + .5)$, $\pi_2 = -(.4 + .5)(-.4)$, $\pi_3 = -(.4 + .5)(-.4)^2$, $\ldots$
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{3.1.2}
+Consider the AR(2) model 
+\[
+X_t = .7 X_{t-1} - .1X_{t-2} = Z_t 
+\]
+Is it causal? Find it's MA($\infty$) representation.
+\pause
+
+\begin{align*}
+\phi(z) &= 1 - .7z + .1 z^2 \\
+&= .1(z^2 - 7z + 10) \\
+&= .1(z - 5)(z-2)
+\end{align*}
+
+Because both $|z_1| = |5|$ and $|z_2| = |2|$ are outside of the unit circle, this model is causal. 
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{3.1.2}
+Consider the AR(2) model 
+\[
+X_t = .7 X_{t-1} - .1X_{t-2} = Z_t 
+\]
+Is it causal? Find it's MA($\infty$) representation.
+\pause
+\newline
+
+Find the reciprocal of $\phi(z)$ first
+\begin{align*}
+\chi(z)\phi(z) &= 1\\
+(1 + \chi_1 z + \chi_2 z^2 + \chi_3 z^3 + \cdots)(1 - .7z + .1 z^2 ) &= 1 \\
+1 + z(-.7 + \chi_1) + z^2(.1 - .7\chi_1 + \chi_2) + z^3(.1 \chi_1 + -.7 \chi_2 + \chi_3) + \cdots &= 1
+\end{align*}
+
+So $\chi_0 = 1$, $\chi_1 = .7$, $\chi_2 = .7^2 -.1 $, $\chi_3 = .7 \chi_2  - .1 \chi_1$.
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{3.1.2}
+Consider the AR(2) model 
+\[
+X_t = .7 X_{t-1} - .1X_{t-2} = Z_t 
+\]
+Is it causal? Find it's MA($\infty$) representation.
+\newline
+
+Then multiply both sides by this reciprocal 
+\begin{align*}
+\psi(z) &= \chi(z)\theta(z)\\
+&= \chi(z)
+\end{align*}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{3.1.3}
+Consider the ARMA(2,1) model 
+\[
+X_t - .75 X_{t-1} + .5625 X_{t-2} = Z_t + 1.25 Z_{t-1} 
+\]
+Is it causal? Is it invertible? Hint: $.75^2 = .5625$
+\pause
+\newline
+
+Causality check on $\phi(z) = 1 - .75 z + .5625 z^2$ using quadratic formula:
+\begin{align*}
+\frac{.75 \pm \sqrt{.75^2 - 4(.5625) }}{(2)(.5625)} &= \frac{.75 \pm \sqrt{.75^2\{1 - 4\} }}{(2)(.5625)} \\
+&= \frac{.75 \pm .75 \sqrt{-3 }}{(2)(.5625)} = \frac{2}{3}(1 \pm \sqrt{3}i)
+\end{align*}
+$|z_1| = |2/3 + i 2\sqrt{3}/3| = \sqrt{4/9 + 12/9} = 4/3 > 0$. $|z_2|$ is the same. So this is a causal model.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{3.1.3}
+Consider the ARMA(2,1) model 
+\[
+X_t - .75 X_{t-1} + .5625 X_{t-2} = Z_t + 1.25 Z_{t-1} 
+\]
+Is it causal? Is it invertible? Hint: $.75^2 = .5625$
+\pause
+\newline
+
+Invertibility check on $\theta(z) = 1 + 1.25 z$. Clearly $|z_1| = |-4/5| <= 1$. So this is not invertible.
+
+\end{frame}
+\end{document} 

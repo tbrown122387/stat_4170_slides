@@ -1,0 +1,7 @@
+\frametitle{Partial Autocorrelation}
+
+There might be a more useful model selection strategy than just checking where you think the ACF and PACF cut off. For example, if the true model is not a pure MA or AR, then this ``finding cutoffs" strategy is useless.
+\newline
+
+Now you have the computational tools to plot sample *and* theoretical ACFs and PACFS. Try more sophisticated strategies to match them up and pick a better model!
+

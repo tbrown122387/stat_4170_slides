@@ -1,0 +1,21 @@
+\frametitle{Method S2: Elimination of Trend and Seasonal Components
+by Differencing}
+
+If our model is
+\[
+X_t = m_t + s_t + Y_t,
+\]
+then
+\[
+\nabla_d X_t = m_t - m_{t-d} + Y_t - Y_{t-d}
+\]
+where $\nabla_d$ is the lag-d difference, (not $\nabla^d$!)
+\newline
+
+In R:
+\begin{verbatim}
+diff(logRets, lag=12)
+\end{verbatim}
+
+Note that $\nabla \nabla_d X_t = \nabla_d \nabla X_t$, but it's recommended that you apply $\nabla_d$ first (left side).
+

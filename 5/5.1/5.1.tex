@@ -1,0 +1,255 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx}
+\usepackage{bm}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["5.1"]{5.1: Preliminary Estimation} 
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+We need an initial set of parameters to start off our Maximum Likelihood fitting procedure. In this section, we learn about four Preliminary Estimation procedures.
+\newline
+
+The books recommendations are
+\begin{itemize}
+\item For pure AR models, use Yule-Walker or Burg 
+\item For MA models, use the Innovations Algorithm or Hannan-Rissanen 
+\item For ARMA models, use the Innovations Algorithm or Hannan-Rissanen
+\end{itemize}
+
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Yule-Walker Equations for AR models}
+
+Multiply both sides of a causal AR process by $X_{t-k}$ where $k=0,1,\ldots, p$ and obtain
+\[
+X_t X_{t-k} = \phi_1 X_{t-1} X_{t-k} + \phi_2 X_{t-2} X_{t-k} + \cdots + \phi_pX_{t-p}X_{t-k} + Z_t X_{t-k}
+\]
+Taking expectations yields
+\[
+\gamma(k) = \phi_1 \gamma(k-1) + \phi_2 \gamma(k-2) + \cdots \phi_p \gamma(k-p) + E[Z_t X_{t-k}].
+\]
+Writing these all at once using matrices and vectors we have
+\begin{block}{Yule-Walker Eqns}
+\[
+\bm{\gamma}_p = \Gamma_p \bm{\phi}
+\]
+if $k=1,\ldots,p$ and 
+\[
+\gamma(0) = \bm{\phi}'\bm{\gamma}_p + \sigma^2
+\]
+if $k=0$. Recall $\bm{\gamma}_p = (\gamma(1),\ldots,\gamma(p))'$ and $\bm{\phi} = (\phi_1, \ldots, \phi_p)'$.
+\end{block}
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Sample Yule-Walker Equations}
+
+What does this have to do with estimation? Well we replace everything with sample estimates, and then solve for the unknown parameters. 
+
+\[
+\bm{\gamma}_p = \Gamma_p \bm{\phi}
+\]
+\[
+\gamma(0) = \bm{\phi}'\bm{\gamma}_p + \sigma^2
+\]
+becomes
+\begin{block}{Sample Yule-Walker Eqns}
+\[
+\hat{\bm{\phi}}_p = \hat{R}^{-1}_p\hat{\rho}_p
+\]
+\[
+\hat{\sigma}^2 = \hat{\gamma}(0)[1 - \hat{\bm{\rho}}_p' \hat{R}^{-1}_p \hat{\bm{\rho}}_p]
+\]
+\end{block}
+% because $\bm{\phi}'\bm{\gamma}_p = [\Gamma^{-1}_p\gamma_p ]' \bm{\gamma}_p = \bm{\gamma}_p ' \Gamma_p^{-1} \bm{\gamma}_p$ and because $R^{-1}_p = \gamma(0)\Gamma^{-1}$.
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Sample Yule-Walker Equations}
+
+Benefits:
+\begin{itemize}
+\item The estimated parameters will always yield a causal model AR model
+\item $\hat{\phi} \overset{approx.}{\sim} \text{N}(\phi, n^{-1}\sigma^2 \Gamma_p^{-1})$ (for CIs, HTs)
+\item Solution pretty much always exists because we rarely have to worry about invertibility of $\hat{\Gamma}_p$ ( $\hat{\gamma}(0) > 0$ sufficient condition)
+\item consistent parameter estimates for pure AR models
+\end{itemize}
+
+Cons come from when $q > 0$
+\begin{itemize}
+\item Equations to solve are nonlinear in $\hat{\phi}$. (We derived in earlier section to obtain covariance).
+\item possible non-uniqueness and non-existence
+\end{itemize}
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{The Innovations Algorithm for MA models}
+
+Yule walker relates parameters to autocovariances/autocorrelations. The innovations algorithm relates parameters to innovations/predictions. Just like in the Yule-Walker derivation, we replace population quantities with sample quantities, and solve for the parameters.
+\newline
+
+Recall that we never derived the innovations algorithm in 2.5. We just played around with some matrices that relate. Here you literally just stick the sample autocovariances in where there were population autocovariances. The book doesn't go into any more detail than that. 
+\begin{block}{The \bf{fitted innovations MA(m) model} is }
+\[
+X_t = Z_t + \hat{\theta}_{m1}Z_{t-1} + \cdots + \hat{\theta}_{mm}Z_{t-m} \hspace{10mm} \{Z_t\} \sim \text{WN}(0, \hat{v}_m)
+\]
+where $\hat{\bm{\theta}}_m$ and $v_m$ are obtained from the innovations algorithm with the ACVF replaced by the sample ACVF.
+\end{block}
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{The Innovations Algorithm for MA models}
+
+The estimates produced from the Innovations Algorithm do not have the same properties as the YW AR estimates
+\begin{enumerate}
+\item the MA process needs to be invertible
+\item there are restrictions put on the lookback window $m$ for the innovations algorithm
+  \begin{itemize}
+  \item smaller than the amount of data you used
+  \item but still sort of big, usually larger than $q$
+  \item $m(n) = o(n^{1/3})$
+  \end{itemize}
+\end{enumerate}
+
+``The choice of $m$ for any fixed sample size $n$ can be made by increasing $m$ until the vector $(\theta_{m1}, \ldots, \theta_{mq})'$ stabilizes. It is found in practice that there is a large range of values of $m$..."
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{The Hannan-Rissanen Algorithm for ARMA(p,q) models}
+
+Notice that an AR(p) model is just a regression model on lagged data. For an ARMA(p,q) model, it can also be seen as a regression, but some of the regressors are unobserved:
+\[
+X_t = \phi_1X_{t-1} + \cdots + \phi_p X_{t-p} + Z_t + \theta_1 Z_{t-1} + \cdots + \theta_q Z_{t-q}.
+\]
+The main idea of the Hannan-Rissanen algorithm is estimate the error terms, and then regress $X_t$ on lagged values and the estimated error terms.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{The Hannan-Rissanen Algorithm for ARMA(p,q) models}
+
+\begin{block}{Hannan-Rissanen Algo for ARMA(p,q) mods}
+Step 1:
+Use a Yule-Walker algorithm to estimate an AR(m) model ( $m > \max(p,q)$ ). This gives you $\hat{\phi}_{m1},\ldots, \hat{\phi}_{mm}$. Calculate the residuals (for $t=m+1,\ldots,n$)
+\[
+\hat{Z}_t = X_t - \hat{\phi}_{m1}X_{t-1} - \cdots - \hat{\phi}_{mm}X_{t-m}
+\]
+
+Step 2:
+Run the regression
+\[
+X_t = \phi_1X_{t-1} + \cdots + \phi_p X_{t-p} + \hat{Z}_t + \theta_1 \hat{Z}_{t-1} + \cdots + \theta_q \hat{Z}_{t-q}.
+\]
+for $t=m+1,\ldots,n$ 
+
+\end{block}
+H\&R also suggest a third step.
+
+\end{frame}
+
+
+
+
+\end{document} 

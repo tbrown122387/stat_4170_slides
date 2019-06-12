@@ -1,0 +1,411 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{amsmath,amssymb,graphicx, bm}
+\usepackage{dirtytalk} % quote thing
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title["8.7"]{8.7: Cointegration}
+
+\author{Taylor} 
+\institute[UVA] 
+{
+University of Virginia \\
+\medskip
+\textit{} 
+}
+\date{} 
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\titlepage 
+\end{frame}
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Motivation}
+
+\begin{enumerate}
+\item What happens when the roots of $\det[\bm{\Phi}(z)]$ are not all outside the unit circle?
+\item What happens if several series share a stochastic trend, or in other words, if there is a long-run economic equilibrium between several non-stationary variables?
+\end{enumerate}
+
+Supplementary materials: chapters 6.3 of ``New Introduction to Multiple Time Series Analysis" by Helmut L\"{u}tkepohl.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 8.7.1}
+
+If
+\begin{align*}
+\left[\begin{array}{c}
+X_t \\
+Y_t
+\end{array}\right]
+&=
+\left[\begin{array}{c}
+\sum_{i=1}^t Z_t \\
+\sum_{i=1}^t Z_t + W_t
+\end{array}\right] \\
+&=
+\left[ \begin{array}{cc}
+1 & 0 \\
+1 & 1
+\end{array}\right]
+\left[\begin{array}{c}
+Z_t \\
+W_t
+\end{array}\right] 
++
+\left[ \begin{array}{cc}
+1 & 0 \\
+1 & 0
+\end{array}\right]
+\left[\begin{array}{c}
+Z_{t-1} \\
+W_{t-1}
+\end{array}\right]+ \cdots
+\end{align*}
+then
+\begin{align*}
+\left[\begin{array}{c}
+X_t \\
+Y_t
+\end{array}\right]
+&=
+\left[\begin{array}{c}
+X_{t-1} \\
+Y_{t-1}
+\end{array}\right]
++
+\left[\begin{array}{cc}
+1 & 0 \\
+1 & 1
+\end{array}\right]
+\left[\begin{array}{c}
+Z_{t} \\
+W_{t}
+\end{array}\right]
++
+\left[\begin{array}{cc}
+0 & 0 \\
+0 & -1
+\end{array}\right]
+\left[\begin{array}{c}
+Z_{t-1} \\
+W_{t-1}
+\end{array}\right]
+\end{align*}
+\pause
+
+$\det[\bm{\Phi}(z)] = \det[I - Iz] = (1-z)(1-z)$. The roots are $z_1 = z_2 = 1$.
+
+
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 8.7.1}
+
+So let's try differencing all the series. 
+\begin{align*}
+\left[\begin{array}{c}
+X_t \\
+Y_t
+\end{array}\right]
+&=
+\left[\begin{array}{c}
+X_{t-1} \\
+Y_{t-1}
+\end{array}\right]
++
+\left[\begin{array}{cc}
+1 & 0 \\
+1 & 1
+\end{array}\right]
+\left[\begin{array}{c}
+Z_{t} \\
+W_{t}
+\end{array}\right]
++
+\left[\begin{array}{cc}
+0 & 0 \\
+0 & -1
+\end{array}\right]
+\left[\begin{array}{c}
+Z_{t-1} \\
+W_{t-1}
+\end{array}\right]
+\end{align*}
+becomes
+$$
+\triangledown 
+\left[\begin{array}{c}
+X_t \\
+Y_t
+\end{array}\right]
+=
+\left[\begin{array}{cc}
+1 & 0 \\
+1 & 1
+\end{array}\right]
+\left[\begin{array}{c}
+Z_{t} \\
+W_{t}
+\end{array}\right]
++
+\left[\begin{array}{cc}
+0 & 0 \\
+0 & -1
+\end{array}\right]
+\left[\begin{array}{c}
+Z_{t-1} \\
+W_{t-1}
+\end{array}\right]
+$$
+\pause
+
+$\det[\bm{\Theta}(z)] = 1+z$. This process is not invertible. Note that you need to re-define the noise as $(Z_t, Z_{t} + W_t)'$ so that the leading coefficient matrix is an identity matrix.
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Example 8.7.1}
+
+\begin{align*}
+\left[\begin{array}{c}
+X_t \\
+Y_t
+\end{array}\right]
+&=
+\left[\begin{array}{c}
+\sum_{i=1}^t Z_t \\
+\sum_{i=1}^t Z_t + W_t
+\end{array}\right] \\
+&=
+\left[ \begin{array}{cc}
+1 & 0 \\
+1 & 1
+\end{array}\right]
+\left[\begin{array}{c}
+Z_t \\
+W_t
+\end{array}\right] 
++
+\left[ \begin{array}{cc}
+1 & 0 \\
+1 & 0
+\end{array}\right]
+\left[\begin{array}{c}
+Z_{t-1} \\
+W_{t-1}
+\end{array}\right]+ \cdots
+\end{align*}
+Notice that $X_t = Y_t + W_t$, so $X_t \approx Y_t$. They are each separately nonstationary, but they are ``tied together." If you didn't difference them, but instead looked at the spread between them, this would be an AR(0) model.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definitions}
+
+We call a $K$-dimensional process $Y_t$ {\bf integrated of order $d$}, written as $Y_t \sim I(d)$, if $\triangledown^d Y_t$ is causal and stationary and $\triangledown^{d-1} Y_t$ is not. Usually we will be interested in the case of $d = 1$.
+\newline
+
+An $I(d)$ process $Y_t$ is called {\bf cointegrated}  if there exists atleast one (there may be more) linear combination $\beta'Y_t$, $\beta \neq 0$ which is integrated of order less than $d$.
+\newline
+
+In the last example $d=1$ and $\beta' = (1,-1)$. Often there will be more than $1$ linear combination (e.g. $\bm{\beta}$). And these vectors are not unique.
+
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Definitions}
+
+\begin{block}{VECM}
+Let $\mathbf{Y}_t$ be a $K$-dimensional, vector-valued time series. A {\bf vector error correction model} (VECM) can be written as
+$$
+\triangledown Y_t = \bm{\alpha} \bm{\beta} ' Y_{t-1} + \Gamma_1 \triangledown Y_{t-1} + U_t,
+$$
+where $\bm{\alpha}$, $\bm{\beta}$ are $K \times r$ matrices.
+\end{block}
+
+This is like a VAR(1) model, but note that the differences depend additionally on linear combinations of the levels: $ \bm{\beta} ' Y_{t-1}$. 
+\newline
+
+Alternatively you could think of this as a nonstationary VAR(2) model (see next slide).
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{VAR vs VECM}
+
+Start with a non-stationary VAR(2)
+$$
+Y_t = A_1 Y_{t-1} + A_2 Y_{t-2} + U_t
+$$
+difference once
+\begin{align*}
+Y_t - Y_{t-1} &= -IY_{t-1} + A_1 Y_{t-1} + A_2 Y_{t-2} + U_t \\
+ &= -IY_{t-1} + A_1 Y_{t-1} + A_2 Y_{t-1} - A_2 Y_{t-1} + A_2 Y_{t-2} + U_t\\
+ &= -(I - A_1 - A_2)Y_{t-1} - A_2 \triangledown Y_{t-1} + W_t \\
+ &= \bm{\alpha} \bm{\beta} ' Y_{t-1} + \Gamma_1 \triangledown Y_{t-1} + U_t
+\end{align*}
+
+Note that -$(I - A_1 - A_2) = \bm{\alpha} \bm{\beta} '$ is singular because $\det[ \bm{\Phi}(z)]$ has a unit root. 
+
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{A Second Definition}
+
+The $K$-dimensional VAR(p)
+$$
+Y_t = A_1 Y_{t-1} + A_2 Y_{t-2} + \cdots + A_pY_{t-p} + U_t
+$$
+is {\bf cointegrated of rank $r$} if 
+$$
+\bm{\Pi} \overset{\text{def}}{=} -(I - A_1 - \cdots - A_p)
+$$
+has rank $0 < r < K$, and thus can be written as $\bm{\alpha} \bm{\beta}'$ with each of these matrices being of dimension $K \times r$. The matrix $\bm{\beta}$ is called the {\bf cointegration matrix} or {\bf matrix of cointegrating vectors} and $\bm{\alpha}$ is called the {\bf loadings matrix}. 
+
+\end{frame}
+
+
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{A Little Algebra}
+
+Assume the $K$-dimensional VAR(p)
+$$
+Y_t = A_1 Y_{t-1} + A_2 Y_{t-2} + \cdots + A_pY_{t-p} + U_t
+$$
+is cointegrated of rank $r$. Then 
+\begin{align*}
+\triangledown Y_t &= - IY_{t-1} + A_1 Y_{t-1} + A_2 Y_{t-2} + \cdots + A_pY_{t-p} + U_t\\
+&= - IY_{t-1} + A_1 Y_{t-1} + A_2 Y_{t-2} + \cdots + A_pY_{t-p} + U_t \\
+& \hspace{10mm} \pm A_2 Y_{t-1} \pm \cdots \pm A_p Y_{t-1} \\
+&= \bm{\Pi} Y_{t-1} + (-A_2 - A_3 - \cdots - A_p) Y_{t-1} \\
+& \hspace{10mm} A_2 Y_{t-2} + \cdots + A_p Y_{t-p} + U_t\\
+&= \bm{\Pi} Y_{t-1} + \bm{\Gamma}_1\triangledown Y_{t-1} + \cdots + \bm{\Gamma}_{p-1} \triangledown Y_{t-p+1} 
+\end{align*}
+where $A_1 = \bm{\Pi} + I + \bm{\Gamma}_1$, $A_p = -\bm{\Gamma}_{p-1}$ and $A_i = \bm{\Gamma}_i - \bm{\Gamma}_{i-1}$ for $i=2,\ldots, p-1$.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Interpretation of $\bm{\beta} ' Y_{t-1}$}
+
+In
+$$
+\triangledown Y_t = \bm{\alpha} \bm{\beta} ' Y_{t-1} + \Gamma_1 \triangledown Y_{t-1} + U_t,
+$$
+
+$\bm{\alpha} \bm{\beta} ' Y_{t-1} $  must be causal and stationary. Therefore
+$$ 
+[\bm{\alpha}'\bm{\alpha}] ^{-1}\bm{\alpha}'\bm{\alpha} \bm{\beta} ' Y_{t-1} = \bm{\beta} ' Y_{t-1}
+$$ 
+must be causal and stationary. 
+\newline
+
+Think of this as a lower-dimensional series of ``spreads" between financial time series. They are not differenced, but they are linearly-combined in $1$ or more ways.
+
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Nota Bene: Non-Uniqueness of Cointegrating Relationships}
+
+The matrix $\bm{\Pi} = \bm{\alpha}\bm{\beta}'$ is not unique. Take any invertible matrix $Q$. Clearly 
+$$
+\bm{\alpha}\bm{\beta}' = \bm{\alpha}Q Q^{-1}\bm{\beta}',
+$$
+so we can always set $\bm{\alpha}^* = \bm{\alpha}Q$ and $\bm{\beta}^* =\bm{\beta} Q^{-1}$
+
+
+\end{frame}
+
+
+
+\end{document} 
