@@ -1,0 +1,389 @@
+---
+title: "Introduction"
+author: "Taylor R. Brown"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(quantmod)
+getSymbols("AAPL")
+```
+
+## Welcome!
+
+The purpose of the class is to expose you to a *wide* variety of mathematical concepts used in the financial industry.
+
+Different participants in different markets will specialize in different types of techniques. 
+
+Let's start with descriptions of a few different financial instruments.
+
+
+
+## Time Value of Money
+
+\$$100$ now is worth more than \$$100$ tomorrow. Why? Because if you had it now, you could invest it.
+
+If there is some *risk-free* (annualized) interest rate $r$, then after one year \$$100$ becomes \$$100(1+r)$. After $n$ years it becomes \$$100(1+r)^n$
+
+$$
+\text{Future Value } n \text{ years ahead} = \text{Present Value } \times (1+r)^n 
+$$
+or equivalently
+
+$$
+\frac{\text{Future Value } n \text{ years ahead}}{(1+r)^n} = \text{Present Value}  
+$$
+
+## Time Value of Money
+
+If the rate is compounded $m$ times per year, the value of \$$100$ now in $n$ years will be
+
+$$
+100 \times \left(1 + \frac{r}{m}\right)^{mn}
+$$
+
+If the rate is compounded continuously, the value of \$$100$ now in $n$ years will be
+
+
+$$
+\lim_{m \to \infty} 100 \times \left(1 + \frac{r}{m}\right)^{mn} = 100 e^{rn}
+$$
+
+## Bond Markets
+
+*Bonds* are financial instruments represents one party lending money to another. 
+
+Governments and companies sell/issue bonds to borrow money. 
+
+Investors buy bonds to lend money. 
+
+
+## Bond Markets
+
+Bond holders may receive *coupons* or they may not, and that depends on what kind of bond we're talking about. 
+
+A **zero-coupon bond** does not pay coupons. The buyer buys a bond at a discount, and receives the full *face value* at the *maturity date* (assuming the buyer doesn't sell it ahead of that time). 
+
+A **coupon bond** pays the face value at the maturity date, but it also pays intermittent extra payments, usually twice a year. 
+
+
+## Bond Markets
+
+*Yield* is a percent measurement of how much money a bondholder makes *if he/she holds the bond until maturity.* It can be calculated in a few ways. 
+
+**Yield to maturity** is the most common because it takes into account **the time value of money**. 
+
+
+
+## Bond Markets
+
+
+**Yield to maturity** is the $y$ that satisfies
+
+$$
+P = \frac{C_1}{1+y} + \frac{C_2}{(1+y)^2} + \cdots + \frac{C_k + F}{(1+y)^k}
+$$
+
+where
+
+  - $F$ is face value
+  - $k$ is the number of coupon payments received over the life of the bond
+  - $P$ is the price of the bond now
+  - $C_i$ is a coupon payment $i$ step ahead in the future
+
+
+## Bond Markets
+
+$$
+P = \frac{C_1}{1+y} + \frac{C_2}{(1+y)^2} + \cdots + \frac{C_k + F}{(1+y)^k}
+$$
+
+Example 1: 10-year zero-coupon has a face value of $100$ has a yield-to-maturity of $10\%$. 
+
+- $P = \frac{100}{(1.1)^10} = \$38.55$
+
+If we had the price $P$ but didn't know the yield $y$, we could solve for that instead: $(1+y)^k = F/P \implies y = (F/P)^{1/k} - 1$
+
+
+## Bond Markets
+
+
+```{r}
+yields <- seq(.01, .2, .01)
+price <- 100/(1+yields)^10
+plot(yields, price, type = "l", main = "price versus yield for zero-coupon 10 yr. bond")
+```
+
+In general, yields and prices move in opposite directions, and bonds with longer maturities are more sensitive to yield movements.
+
+
+## Bond Markets
+
+Suppose you couldn't hold it until maturity, though. Say after five years you had to sell it. 
+
+Suppose further that the yield (to-maturity) was $5\%$ at that point in the future. 
+
+At that point in time, $\tilde{P} = \frac{100}{(1.05)^5}  = \$78.35$. You bought low (\$38.55) and sold high (\$78.35). Nice!
+
+However, it could've gone the other way on you. Future interest rates will always be unknown and *random*. You either model the randomness, or you always hold until maturity. 
+
+
+## Bond Markets
+
+$$
+P = \frac{C_1}{1+r} + \frac{C_2}{(1+r)^2} + \cdots + \frac{C_k + F}{(1+r)^k}
+$$
+
+Example 2: 3-year zero-coupon has a face value of $100$ and is selling for \$$90$ right now. It pays coupons at a rate of $5$\% (annualized), twice a year. What's the yield?
+
+- $C_i = \frac{.05}{2}100 = 2.5$
+- $k = 3 * 2 = 6$ (twenty semi-annual periods)
+
+Solve for $y$:
+
+$$
+90 = \frac{2.5}{1+y} + \frac{2.5}{(1+y)^2} + \cdots + \frac{2.5}{(1+y)^6} + \frac{100}{(1+y)^6}
+$$
+
+## Bond Markets
+
+Solve for $y$:
+
+$$
+90 = \frac{2.5}{1+y} + \frac{2.5}{(1+y)^2} + \cdots + \frac{2.5}{(1+y)^6} + \frac{100}{(1+y)^6}
+$$
+
+or equivalently find the root of 
+
+$$
+f(y)= 90 - \left[ \frac{2.5}{1+y} + \frac{2.5}{(1+y)^2} + \cdots + \frac{2.5}{(1+y)^6} + \frac{100}{(1+y)^6}\right]
+$$
+
+## Bond Markets
+
+
+```{r, echo=TRUE, eval = FALSE}
+paymentsPerYear <- 2
+numYears <- 3
+couponRate <- .05
+faceValue <- 100
+discountPrice <- 97.29
+numPeriods <- paymentsPerYear*numYears
+
+f <- function(y){
+  coupons <- rep(couponRate*faceValue/paymentsPerYear, 
+                 numPeriods)   
+  discountPrice - 
+    sum(coupons/((1+y)^(1:numPeriods))) - 
+    faceValue/((1+y)^(numPeriods))
+}
+uniroot(f, c(0,1))
+```
+
+
+## Bond Markets
+
+
+```{r}
+paymentsPerYear <- 2
+numYears <- 3
+couponRate <- .05
+faceValue <- 100
+discountPrice <- 97.29
+numPeriods <- paymentsPerYear*numYears
+
+f <- function(y){
+  coupons <- rep(couponRate*faceValue/paymentsPerYear, numPeriods)   
+  discountPrice - sum(coupons/((1+y)^(1:numPeriods))) - faceValue/((1+y)^(numPeriods))
+}
+uniroot(f, c(0,1))
+```
+
+
+## Bond Markets
+
+We solved this for $y$:
+
+$$
+90 = \frac{2.5}{1+y} + \frac{2.5}{(1+y)^2} + \cdots + \frac{2.5}{(1+y)^6} + \frac{100}{(1+y)^6}
+$$
+
+However, $y$ here is the semi-annual rate. If we wanted to get the annualized yield $r$, 
+$$
+90 = \frac{2.5}{ (1+\frac{r}{2}) } + \frac{2.5}{(1+\frac{r}{2})^2} + \cdots + \frac{2.5}{(1+\frac{r}{2})^6} + \frac{100}{(1+\frac{r}{2})^6}
+$$
+so we just double $y$ and get $6$\%.
+
+
+## Bond Markets
+
+
+Nothing about this has to be random. You buy a bond, you hold to maturity, you know what you'll get. Unless...
+
+
+  1. the borrower declares bankruptcy or restructures, 
+  2. you sell the bond to someone else before the maturity date, or
+  3. the value of the currency gets devalued, or...
+
+Later we will discuss how to address some of these topics. We will model default probabilities, and we will model the random time-evolution of yields. 
+
+## Bond Markets
+
+If you might not hold to maturity, it's worth knowing how sensitive the price is to interest rates:
+
+A bond's *duration* measures, roughly, how long you'll have to wait to get your money back. It also how much your bond price will change for a one point change in yield. 
+
+
+
+## Bond Markets
+
+Instead of 
+
+$$
+P = \frac{C_1}{1+r} + \frac{C_2}{(1+r)^2} + \cdots + \frac{C_k + F}{(1+r)^k}
+$$
+let's write the price of a bond as  
+
+$$
+P = \sum_{i=1}^n C_i e^{-r t_i}
+$$
+Then
+
+$$
+- \frac{dP}{dr} = \sum_{i=1}^k C_i e^{-r t_i} t_i
+$$
+*Duration* is defined as
+$$
+D := - \frac{dP}{dr} P^{-1} = \sum_{i=1}^k \left[ \frac{C_i e^{-r t_i}}{P}\right] t_i
+$$
+
+## Bond Markets
+
+Duration is positive. Its unit is years. 
+
+If the yield increases by one percent, the percent change in a bond price is $-D$. :(
+
+If you're *forecasting* rate increases, you want to reduce your duration. If you're right, less pain. 
+
+If you're *forecasting* rate decreases, you want to increase your duration. If you're right, bigger reward.
+
+There's also a thing called *convexity*, which is related to the second derivative of the bond price...
+
+## Equities
+
+Shares of *stock* represent ownership in a company.
+
+Companies sell stock to raise money. Investors buy stock in the hopes that it will be worth more later. 
+
+```{r}
+plot(Cl(AAPL))
+```
+
+## Equities
+
+If you buy a one share of US stock at time $t$ with price $P_t$, and then sell it at $P_{t+1}$, you made (or lost) $P_{t+1} - P_t$. 
+
+Usually we express this as a percentage of the amount of money you initially invested. 
+
+If there are no dividends, the *one period arithmetic return* is 
+$$R_t := \frac{P_{t+1} - P_t}{P_t}  $$
+(sometimes it is scaled by $100$ )
+
+If you do receive a dividend $d_{t+1}$, then the return is 
+$$
+R_t := \frac{P_{t+1} - P_t + d_t}{P_t}
+$$
+A lot of times we just plot the "Adjusted" close, which is adjusted for all corporate actions, and is easier to model. 
+
+
+## Equities
+
+
+```{r}
+returns <- diff(Ad(AAPL))/Ad(AAPL)[-length(Ad(AAPL))]*100
+plot(returns)
+```
+
+
+## Equities
+
+Notice that 
+$$
+1 + R_t = \frac{P_{t-1}}{P_{t-1}} + \frac{P_{t} - P_{t-1} }{P_{t-1}} = P_t/P_{t-1}
+$$
+
+If you start with $V_t$ dollars at time $t$, then after two periods you'll have
+
+$$
+V_t(1+ R_{t+1})(1+ R_{t+2}) = \underbrace{\frac{V_t}{P_t}}_{\text{number of shares}} \underbrace{P_t}_{\text{share price}} \left(\frac{P_{t+1}}{P_t}\right)\left(\frac{P_{t+2}}{P_{t+1}}\right)
+$$
+
+In general, after $n$ periods, your rate of return is 
+$$
+\prod_{i = 1}^n(1+R_{t+i})
+$$
+What is the distribution of this random variable? 
+
+
+## Equities
+
+We also sometimes use the continuously compounded rate of return:
+
+$$
+R_t := \log \frac{P_{t+1}}{P_t} = \log P_{t+1} - \log P_t
+$$
+If you invest $V_t$ at time $t$, then the random value of the position at time $t+2$ is
+
+$$
+V_t\exp(R_{t+1})\exp(R_{t+2})
+$$
+We are interested in forecasting $R_{t+i}$. Does it tend to be positive? How volatile are these returns? What are the *drivers* of these returns?
+
+## Currencies
+
+Different countries have different currencies. 
+
+Buying goods abroad will first require you to change your local currency into a foreign one. 
+
+After accepting payment for selling goods abroad, you will have to convert this payment back to your local currency. 
+
+The value of one currency in terms of another changes over time. 
+
+For example, if the EUR/USD exchange rate is 1.0664, that means one EURO is equivalent (at that moment) to 1.0664 USD.
+
+## Currencies
+
+
+```{r}
+getFX("USD/JPY")
+plot(USDJPY)
+```
+
+
+## Commodities
+
+The price of commodities changes over time as well: different types of oil, metals, and agricultural products can all be bought and sold. 
+
+## Commodities
+
+
+```{r}
+getMetals(c("GOLD"))
+plot(XAUUSD)
+```
+
+
+
+
+## Sources:
+
+Options, Futures and Other Derivatives Chapter 4
+
+An Introduction to Analysis of Financial Data with R  (Ruey Tsay)
+
+
+
+
+
+

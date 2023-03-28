@@ -1,0 +1,420 @@
+---
+title: "Univariate Time Series Models"
+author: "Taylor R. Brown"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(xts)
+```
+
+
+## Last class
+
+The last two classes we learned about different types of financial instruments. 
+
+Now we will start discussing how to model univariate series.
+
+The models we discuss are useful in their own rite, and they are also building blocks of more complicated models.
+
+
+## Definition
+
+
+$\{X_t\}$ is **strictly stationary** if for any $h$, and any selection of $k$ time points ($t_1, \ldots, t_k$):
+\[
+F_{X_{t_1 + h}, \ldots, X_{t_k +h}}(a_1, \ldots, a_k) = F_{X_{t_1}, \ldots, X_{t_k }}(a_1, \ldots, a_k),
+\]
+for any $a_1, \ldots, a_k$.
+
+
+Intuitively this means that the distribution of a bunch of time points does NOT depend on where they are in time, only on how they are spaced apart from one another.
+
+More often we will be concerned with *weak* stationarity.
+
+## Definition
+
+
+Let $\{X_t\}$ be a time series with $E[X_t] < \infty$ for each $t$.
+
+The **mean function** is defined as
+$$
+\mu_X(t) = E[X_t]
+$$
+
+
+The **covariance function** is defined on pairs of integral time points $r,s$ as 
+\begin{align*}
+\gamma_{X}(r,s) &= \text{Cov}(X_r, X_s) \\
+&= E[(X_r - E[X_r])(X_s-E[X_s])] \\
+&= E[X_rX_s] - E[X_r]E[X_s].
+\end{align*}
+
+
+
+## Definition
+
+
+$\{X_t\}$ is **weakly stationary** if 
+
+  - $\mu_X(t)$ is constant or free of $t$,
+  - $\gamma_X(t,t+h)$ is independent or free of $t$ for each $h$ 
+
+Intuitively: mean doesn't change, and covariances only depend on the lags.
+
+From now on, when we say ``stationary," we mean this type.
+
+
+## Definition
+
+
+The **autocovariance function** for $\{X_t\}$ is defined as
+$$
+\gamma_X(h) = \text{Cov}(X_{t+h},X_t).
+$$
+
+
+"Auto" means "self"
+
+The **autocorrelation function** for $\{X_t\}$ is defined as
+$$
+\rho_X(h) = \text{Cor}(X_{t+h},X_t) = \frac{ \text{Cov}(X_{t+h},X_t) }{ \sqrt{\text{Var}(X_t)\text{Var}(X_{t+h})}} = \frac{\gamma_X(h)}{\gamma_X(0)}.
+$$
+
+Because we are only defining this function for stationary series
+
+
+## Properties
+
+
+The covariance operator is **bilinear**: 
+\begin{itemize}
+\item $\text{Cov}(aX,Y) = a\text{Cov}(X,Y)$
+\item $\text{Cov}(X,aY) = a\text{Cov}(X,Y)$
+\item $\text{Cov}(X+Z,Y) = \text{Cov}(X,Y) + \text{Cov}(Z,Y)$
+\item $\text{Cov}(X,Y+Z) = \text{Cov}(X,Y) + \text{Cov}(X,Z)$
+\end{itemize}
+
+
+"bi" means "two" or "both" (linear in both arguments)
+
+## Properties
+
+
+Independence implies (is stronger than) $0$ correlation/covariance
+\begin{align*}
+\gamma_X(h) &= E[X_tX_{t+h}] - E[X_t]E[X_{t+h}] \\
+&=  E[X_t]E[X_{t+h}] - E[X_t]E[X_{t+h}] \\
+&= 0 
+\end{align*}
+
+We use these properties a lot when we look at autocovariance functions for different models.
+
+
+## Example 1: IID Noise
+
+
+Let $\{X_t\}$ be IID noise with $E[X_t] = 0$ and $\operatorname{Var}(X_t) = E[X_t^2] = \sigma^2 < \infty$. Then:
+
+\[ 
+\gamma_X(h) = E[X_{t+h}X_t] = 
+  \begin{cases} 
+      \sigma^2 & h = 0 \\
+      0 & h \neq 0 
+   \end{cases}
+\]
+
+  - This is stationary.
+  - We are not saying what the distribution is!
+  - From now on we write $X_t \overset{iid}{\sim} \text{IID}(0, \sigma^2)$
+
+
+## Example 2: White Noise
+
+
+Let $\{X_t\}$ be uncorrelated but not necessarily independent with $E[X_t] = 0$ and $\operatorname{Var}(X_t) = E[X_t^2] = \sigma^2 < \infty$. Then:
+
+\[ 
+\gamma_X(h) = E[X_{t+h}X_t] = 
+  \begin{cases} 
+      \sigma^2 & h = 0 \\
+      0 & h \neq 0 
+   \end{cases}
+\]
+
+
+  - This is stationary.
+  - We are not saying what the distribution is!
+  - From now on we write $X_t \overset{iid}{\sim} \text{WN}(0, \sigma^2)$
+  - All IID Noise is White Noise, but not all White Noise is IID Noise.
+
+
+## Example 3: Random Walk
+
+
+Let $\{X_t\}$ be uncorrelated but not necessarily independent with $E[X_t] = 0$ and $\operatorname{Var}(X_t) = E[X_t^2] = \sigma^2 < \infty$. Define the random walk as $S_t = \sum_{i=1}^t X_i$. Then:
+
+\begin{align*}
+\gamma_X(t+h,t) &= E[S_{t+h}S_t] \\
+&= E\left[\left\{\sum_{i=1}^{t+h} X_i\right\} \left\{ \sum_{i=1}^t X_i \right\}\right] \\
+&=  E\left[\left\{\sum_{i=1}^{t} X_i \right\} \left\{\sum_{i=1}^t X_i \right\}\right] \\
+&= \sum_{i=1}^t E[X_i^2] \\
+&=  t \sigma^2.
+\end{align*}
+
+
+## Example 3: Random Walk
+
+
+Let $\{X_t\}$ be uncorrelated but not necessarily independent with $E[X_t] = 0$ and $\operatorname{Var}(X_t) = E[X_t^2] = \sigma^2 < \infty$. Define the random walk as $S_t = \sum_{i=1}^t X_i$. Then:
+
+\[
+\gamma_X(h) =  t \sigma^2.
+\]
+
+  - This is not stationary!
+  - We are not saying what the distribution is!
+  - From now on we write $X_t \overset{iid}{\sim} \text{WN}(0, \sigma^2)$
+  - All IID Noise is White Noise, but not all White Noise is IID Noise.
+
+
+## Example 4: First-Order Moving Average MA(1)
+
+
+
+Let $\{Z_t\} \sim \text{WN}(0, \sigma^2)$. Define $\{X_t\}$ as
+\[
+X_t = Z_t + \theta Z_{t-1}
+\]
+with $t \in \mathbb{Z}$, and $\theta \in \mathbb{R}$. 
+\newline
+
+$E[X_t] = 0$ for all $t$ by linearity, and 
+\begin{align*}
+\gamma_X(h) &= E[X_{t+h}X_t] \\
+&= E[(Z_{t+h} + \theta Z_{t+h-1})(Z_t + \theta Z_{t-1})]  \\
+&= E[Z_{t+h}Z_t] + \theta E[Z_{t+h} Z_{t-1}] + \theta E[Z_{t+h-1}Z_t] + \theta^2E[Z_{t+h-1}Z_{t-1}]  \\
+&= (1 + \theta^2) \gamma_Z(h) + \theta \gamma_Z(h+1) + \theta \gamma_Z(h-1)   \\
+&= \begin{cases} 
+      \sigma^2(1 + \theta^2) & h = 0 \\
+      \sigma^2\theta & h = \pm 1 \\
+      0 & |h| > 1
+   \end{cases}
+\end{align*}
+
+## Example 4: First-Order Moving Average MA(1)
+
+
+$E[X_t] = 0$ for all $t$ by linearity, and 
+\begin{align*}
+\rho_X(h) &= \frac{\gamma_X(h)}{\gamma_X(0)} \\
+&= \begin{cases} 
+      1 \\
+      \theta/(1+\theta^2) & h = \pm 1 \\
+      0 & |h| > 1
+   \end{cases}
+\end{align*}
+
+
+  - This is stationary
+
+
+
+## Example 5: First-Order Autoregression AR(1)
+
+
+Let $\{Z_t\} \sim \text{WN}(0, \sigma^2)$. Also, assume $-1 < \phi < 1$, and $E[Z_tX_s] = 0$ for $s < t$. Define $\{X_t\}$ as
+\[
+X_t = \phi X_{t-1} + Z_t \tag{*}
+\]
+with $t \in \mathbb{Z}$. 
+\newline
+
+\begin{enumerate}
+\item $E[X_t] = \phi E[X_{t-1}]$ for all $t$, by linearity. 
+\item And if $h > 0$
+  \begin{align*}
+    \gamma_X(h) &= E[X_{t+h}X_t] \\
+    &= E[(\phi X_{t+h-1} + Z_{t+h})(X_t + Z_t)] \\
+    &= \phi \gamma_X(h-1) 
+  \end{align*}
+\item $\gamma_X(0) = E[(\phi X_{t-1} + Z_t)^2] = \phi^2\gamma_X(0) + \sigma^2 \iff \gamma_X(0) = \frac{\sigma^2}{1-\phi^2 }$
+\end{enumerate}
+
+
+
+## Example 5: First-Order Autoregression AR(1)
+
+
+Let $\{Z_t\} \sim \text{WN}(0, \sigma^2)$. Also, assume $-1 < \phi < 1$, and $E[Z_tX_s] = 0$ for $s < t$. Define $\{X_t\}$ as
+\[
+X_t = \phi X_{t-1} + Z_t \tag{*}
+\]
+with $t \in \mathbb{Z}$. 
+
+
+  - If one has mean $0$, they all do, so we assume they all have mean $0$. 
+  - Clearly $\gamma_X$ is symmetric, i.e. $\gamma_X(h) = \gamma_X(-h)$
+
+
+Under these assumptions, $\{X_t\}$ is stationary with $\mu_X(t) = 0$, $\gamma_X(h) = \phi^{|h|}\frac{\sigma^2}{(1-\phi^2)}$ and $\rho_X(h) = \phi^{|h|}$.
+
+
+
+## The Sample ACVF and ACF
+
+
+We never have the true/population autocovariance or autocorrelation function. So far we are just theorizing about made up models.
+
+
+Enter the **sample autocovariance and autocorrelation functions**. They estimate $\gamma_X$ and $\rho_X$.
+
+
+## The Sample ACVF and ACF
+
+
+The **sample mean** of the data $x_1, \ldots, x_n$ is $\bar{x} = \frac{1}{n}\sum_{t=1}^n x_t.$
+
+
+The **sample autocovariance function** for the data $x_1, \ldots, x_n$ is
+
+\[
+\hat{\gamma}(h) = \frac{1}{n}\sum_{i=1}^{n-|h|}(x_{t+|h|}-\bar{x})(x_t - \bar{x}), \hspace{10mm} -n < h < n.
+\]
+
+
+
+The **sample autocorrelation function** for the data $x_1, \ldots, x_n$ is
+\[
+\hat{\rho}(h) = \frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}, \hspace{10mm} -n < h < n.
+\]
+
+
+
+## Test Yourself
+
+What model is appropriate for the following data?
+
+\begin{center}
+\includegraphics[width=100mm]{pics/Rplot}
+\end{center}
+
+## Test Yourself
+
+
+What about if we look at the sample autocorrelation?
+
+\begin{center}
+\includegraphics[width=100mm]{pics/Rplot01}
+\end{center}
+
+The bounds are $95$\% confidence intervals, which means we should expect to see about $(100-95)$\% of the data to be accidentally outside this range.
+
+## Test Yourself
+
+
+Answer: it was IID Gaussian Noise.
+
+```{r, eval=FALSE, echo = TRUE}
+fakeData <- rnorm(n=100,mean = 0, sd = 2)
+plot(fakeData, type = "b")
+acf(fakeData, type = "correlation")
+```
+
+
+## Test Yourself
+
+
+Round 2: 
+
+\begin{center}
+\includegraphics[width=100mm]{pics/Rplot02}
+\end{center}
+
+## Test Yourself
+
+
+Looking at the sample autocorrelation?
+
+\begin{center}
+\includegraphics[width=100mm]{pics/Rplot03}
+\end{center}
+
+
+## Test Yourself
+
+
+Answer: it was AR(1) with Gaussian Noise.
+```{r, eval=FALSE, echo = TRUE}
+arima.sim(list(ar=c(.9)), n = 200)
+plot(fakeData2, type = "b")
+acf(fakeData2, type = "correlation")
+```
+
+
+## Test Yourself
+
+
+Another one:
+
+
+\begin{center}
+\includegraphics[width=60mm]{pics/Rplot04}\\
+\includegraphics[width=60mm]{pics/Rplot05}
+\end{center}
+
+
+## Test Yourself
+
+
+Answer: MA(1) with Gaussian Noise
+```{r, eval=FALSE, echo = TRUE}
+fakeData3 <- arima.sim(list(ma=c(-.9)), n = 200)
+plot(fakeData3, type = "b")
+acf(fakeData3)
+```
+
+
+## Test Yourself
+
+Daily close prices of S&P500 ETF (SPY)
+
+```{r}
+d <- read.csv.zoo("data/spy.csv")
+d <- cbind(d, log(d[,1]), diff(log(d[,1])))
+colnames(d) <- c("adj price", "log adj price", "log returns")
+plot(d, ylab = "", main = "")
+```
+
+## Test Yourself
+
+```{r}
+acf(coredata(d[-1,3]))
+```
+
+
+## Test Yourself
+
+One day of high frequency micro emini s&p 500 futures
+
+```{r}
+mes <- read.csv("data/mes.csv")
+plot.ts(diff(mes[,1]))
+```
+
+## Test Yourself
+
+
+High frequency micro emini s&p 500 futures
+
+
+```{r}
+acf(diff(mes[,1]))
+```
+
+
+
+## Sources:
+
+Chapter 1.4 of Introduction to Time Series and Forecasting Brockwell/Davis
