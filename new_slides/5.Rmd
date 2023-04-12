@@ -1,0 +1,204 @@
+---
+title: "Regression Models"
+author: "Taylor R. Brown"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(xts)
+spyReturns <- diff(log(read.csv.zoo("data/some_factors.csv")$SPY.Adjusted))*100
+xlkReturns <- diff(log(read.csv.zoo("data/spdrs.csv")$XLK.Adjusted))*100
+xlkSpy <- merge(spyReturns, xlkReturns)
+```
+
+
+## Last class
+
+Last class we finished off modeling individual univariate time series. 
+
+It's also popular in finance to model one time series of returns in terms of others. For this we use **regression.**
+
+These models aren't always used to forecast the future. Most of the time they try to explain the tradeoff between risk/return of a potential investment.
+
+## Simple Linear Regression
+
+Say we are considering an investment in the technology etf `XLK`. 
+
+```{r data, echo=FALSE}
+head(xlkSpy)
+```
+
+Does it "beat" the overall market?
+
+
+
+## Simple Linear Regression
+
+A rising tide lifts all boats...
+
+```{r scatterplot, out.width = "75%", fig.align='center'}
+library(ggplot2)
+ggplot(data = xlkSpy, aes(x=spyReturns,y=xlkReturns)) + 
+  geom_point()
+```
+
+## Simple Linear Regression
+
+
+$$
+Y_t = \beta_0 +\beta_1 X_t + \epsilon_t
+$$
+
+  - $Y_t$: return at time $t$ of XLK
+  - $X_t$: return at time $t$ of SPY
+  - $\epsilon_t$: unexplainable error at time $t$ (typically normally distributed)
+  - $\beta_0, \beta_1$ coefficients
+  
+## Simple Linear Regression
+
+
+$$
+Y_t = \beta_0 +\beta_1 X_t + \epsilon_t
+$$
+
+ - Financial textbooks will often write the model as $Y_t = \alpha + \beta X_t + \epsilon_t$, and you'll hear people talking about the $\alpha$ and $\beta$ of funds.
+ - single index model (Sharpe 1963): $r_{it} - r_f = \alpha + \beta (r_{m,t} - r_{f} ) + \epsilon_{i,t}$
+ - capital asset pricing model (CAPM):  $r_{it} - r_f = 0 + \beta (r_{m,t} - r_{f} ) + \epsilon_{i,t}$
+ - with daily data, $r_f$ is so small it almost doesn't matter
+ - whether or not $\alpha > 0$ is very important to know because this demonstrates a fund has an "edge" or some "secret sauce"
+ - $\beta_1$ is important to know because it's a measure of how "exposed" you are to the "risk" of the overall market
+
+
+
+## Simple Linear Regression
+
+
+"Beta" (i.e. $\beta_1$) cuts both ways...
+
+\begin{align*}
+E[Y_t \mid X] &= E[\beta_0 +\beta_1 X + \epsilon \mid X_t ] \\
+&= \beta_0 +\beta_1 X + E[\epsilon \mid X_t] \\
+&= \beta_0 + \beta_1 X_t 
+\end{align*}
+
+  - Typically $\beta_1 > 0$ so both move in the same direction and are positively correlated
+  - If $\beta_1 > 1$, then it magnifies both wins and losses
+  - If $0 < \beta_1 < 1$, then $Y_t$ is in some sense "safer" (really less wiggly) than investing in the overall market $X_t$.
+  - $\beta_1 < 0$ is rare, but this might happen with an inverse ETF or short-seller fund.
+
+## Simple Linear Regression
+
+
+Nonzero "alpha" (i.e. $\beta_0$) is fantastic but sometimes hard to find
+
+\begin{align*}
+E[Y_t \mid X] &= E[\beta_0 +\beta_1 X + \epsilon \mid X_t ] \\
+&= \beta_0 +\beta_1 X + E[\epsilon \mid X_t] \\
+&= \beta_0 + \beta_1 X_t 
+\end{align*}
+
+You get the same boost to the expected return of $Y$, no matter what $X$ is 
+
+$$
+E[Y_t] = E[E(Y_t \mid X)] = \beta_0 + \beta_1 E[X_t]
+$$
+
+## Simple Linear Regression
+
+$X_t$ doesn't explain all the variability of $Y_t$...
+
+\begin{align*}
+V[Y_t \mid X_t ] &= V[\beta_0 +\beta_1 X_t + \epsilon \mid X_t ] \\
+&= V[\epsilon_t \mid X_t ] \\
+&= \sigma^2
+\end{align*}
+
+
+## Simple Linear Regression
+
+$\beta_1$ magnifies/attenuates the variance.
+
+\begin{align*}
+V[Y_t] 
+&= E[V(Y_t|X_t)] + V[E(Y_t|X_t)] \\
+&= \sigma^2 + V[\beta_0 + \beta_1 X_t] \\
+&= \sigma^2 + \beta_1^2 V[X_t]
+\end{align*}
+
+$\sqrt{V[Y_t]}$ is often called **volatility**
+
+## Simple Linear Regression
+
+$\beta_1$ also gives you a **hedge ratio**
+
+$$
+Y_t - \beta_1 X_t = \beta_0 + \epsilon_t
+$$
+
+\begin{align*}
+V[Y_t - \beta_1 X_t] 
+&= \sigma^2 
+\end{align*}
+
+And $\sigma^2$ is the "risk" you can't diversify/hedge away.
+
+TODO make this a homework problem that shows this minimizes variance.
+
+## Simple Linear Regression
+
+
+```{r, echo = TRUE}
+mod1 <- lm(xlkReturns ~ spyReturns, data = xlkSpy)
+#summary(mod1)
+```
+
+## Simple Linear Regression
+
+
+Right now the 3 month annualized TBill rate is 4.5\%, which equates to a daily rate of 0.0121\%. So alternatively we could do 
+
+```{r, echo = TRUE}
+transformedData <- xlkSpy - 0.0121 
+# we scaled all returns by 100, otherwise it's .000121 
+mod2 <- lm(xlkReturns ~ spyReturns, data = transformedData)
+#summary(mod2)
+```
+
+## Simple Linear Regression
+
+If you believe the intercept had to be zero, then
+
+```{r, echo = TRUE}
+mod3 <- lm(xlkReturns ~ 0 + spyReturns, data = transformedData)
+#summary(mod3)
+```
+
+An even better risk-free rate adjustment would involve going back in time and finding all the time-varying risk-free rates.
+
+## Estimates (without subtracting risk free rate)
+
+
+```{r}
+summary(mod1)
+```
+
+
+## Estimates (with subtracting risk free rate)
+
+
+```{r}
+summary(mod2)
+```
+
+## Estimates (with subtracting risk free rate)
+
+
+```{r}
+summary(mod3)
+```
+
+
+## Sources:
+
+Chapter 2.2,2.3,2.4 of Introduction to Time Series and Forecasting Brockwell/Davis

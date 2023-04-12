@@ -66,6 +66,75 @@ Intuitively: mean doesn't change, and covariances only depend on the lags.
 From now on, when we say ``stationary," we mean this type.
 
 
+## Example
+
+Stock (Adjusted) prices are typically *not* stationary
+
+```{r}
+d <- read.csv("data/spy.csv")
+plot.ts(d[,2])
+```
+
+
+## Example
+
+Their returns (arithmetic or log) usually are considered to be
+
+```{r}
+plot.ts(100*diff(log(d$SPY.Adjusted)))
+```
+
+
+
+## Example
+
+Bond yields probably aren't stationary
+
+```{r, out.width = "75%"}
+d2 <- quantmod::getSymbols("DGS10", src = "FRED", auto.assign = F)
+plot.ts(d2, ylab = "10 year treasury")
+```
+
+But know that they can't deviate too far, or else the world would fall apart.
+
+## Example
+
+To make bond yields stationary, sometimes taking differences will be the most suitable. 
+
+```{r}
+d2$change <- diff(d2[,1])
+d2$percChange <- diff(log(d2[,1]))
+plot(d2$change)
+```
+
+
+## Example
+
+```{r}
+plot(d2$percChange)
+```
+
+
+Sometimes taking percent returns is the most suitable...maybe not in this case, though.
+
+## Example
+
+
+Forex pairs aren't stationary in the short-run either. 
+
+```{r, out.width = "75%"}
+quantmod::getFX("EUR/USD")
+plot.ts(EURUSD[,1])
+```
+
+They can't really deviate too far, unless there's something very wrong going on with one of the countries. 
+
+Percent change is a good transformation for this data, too.
+
+
+
+
+
 ## Definition
 
 

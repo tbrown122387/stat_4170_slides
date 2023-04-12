@@ -1,0 +1,260 @@
+---
+title: "ARCH and GARCH models"
+author: "Taylor R. Brown"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(xts)
+spyReturns <- diff(log(read.csv.zoo("data/some_factors.csv")$SPY.Adjusted))*100
+xlkReturns <- diff(log(read.csv.zoo("data/spdrs.csv")$XLK.Adjusted))*100
+xlkSpy <- merge(spyReturns, xlkReturns)
+```
+
+
+## Definitions
+
+  - $P_t$: the closing price on day/week/month $t$ of stock/stock index
+  - $X_t = \log P_t$: log-price...observed paths look very much like those of a random walk 
+  - $Z_t = \triangledown X_t$: the log return
+  - $100 Z_t$: percentage returns
+  - $h_t = \text{Var}(Z_t|Z_{1:t-1})$ : the conditional variance aka volatility
+
+
+## Motivation
+
+```{r, out.width="80%"}
+plot.ts(spyReturns)
+```
+
+
+## Motivation
+
+<!-- TODO, homework question: Also, if we fit some ARMA model, $h_t$ is independent of $t$ and independent of $Z_{1:t-1}$\footnote{homework question}. This assumption is often violated. -->
+<!-- \newline -->
+
+We would like models that take into account *stylized features* that appear in real-world data such as
+
+  - **tail-heaviness**
+  - **asymmetry**
+  - **volatility clustering** 
+  - **serial dependence without correlation** 
+  
+We introduce AutoRegressive Conditional Heteroscedasticity (ARCH) models, Generalized AutoRegressive Conditional Heteroscedasticity (GARCH), and stochastic volatility (SVOL) models in this slide deck.
+
+
+
+
+## Definition: ARCH(p)
+
+\begin{block}{ARCH(p) (Engle 1982)}
+\begin{align*}
+Z_t &= \sqrt{h_t}e_t, \hspace{10mm} \{e_t\} \sim IID(0,1) \\
+h_t &= \alpha_0 + \sum_{i=1}^p \alpha_i Z^2_{t-i}.
+\end{align*}
+$\alpha_0 > 0$, $a_i \ge 0$, $p \in \mathbb{N}$
+\end{block}
+
+\begin{itemize}
+\item volatility increases if we have observed big movements
+\item setting $a_i$ to $0$ gives us white noise model
+\item $\{e_t\}$ is sometimes but not always assumed to be Normal
+\end{itemize}
+
+
+## Definition: GARCH(p,q) model
+
+\begin{block}{GARCH(p,q)}
+\begin{align*}
+Z_t &= \sqrt{h_t}e_t, \hspace{10mm} \{e_t\} \sim IID(0,1) \\
+h_t &= \alpha_0 + \sum_{i=1}^p \alpha_i Z^2_{t-i} + \sum_{j=1}^q \beta_j h_{t-j}.
+\end{align*}
+$\alpha_0 > 0$, $a_i \ge 0$, $\beta_j \ge 0$, $p \in \mathbb{N}$
+\end{block}
+
+\begin{itemize}
+\item now volatility is a function of its own past values, in addition to the past observations
+\item $\{e_t\}$ may or may not be normal
+\end{itemize}
+
+## Definition: Stochastic Volatility model
+
+
+\begin{block}{Stochastic Volatility Model}
+\begin{align*}
+Z_t &= \sqrt{h_t}e_t, \hspace{10mm} \{e_t\} \sim IID(0,1) \\
+\ln h_t &= \gamma_0 + \gamma_1 \ln h_{t-1} + \eta_t, \hspace{10mm} \{\eta_t\} \sim IID(0,\sigma^2). 
+\end{align*}
+where $\{\eta_t\}$ and $\{e_t\}$ are independent.
+\end{block}
+
+\begin{itemize}
+\item log-volatility is an AR(1) process. 
+\item $\gamma_1$ is usually around $.95$.
+\item more difficult to estimate (intractable likelihood)
+\end{itemize}
+
+
+
+## ARCH(1)
+
+In the case of ARCH(1), $h_t = \alpha_0 + \alpha_1 Z_{t-1}^2$ and
+
+\begin{align*}
+Z_t^2 &= h_t e_t^2\\
+&= [\alpha_0 + \alpha_1 Z^2_{t-1}] e_t^2 \\
+&= \alpha_0 e_t^2 + \alpha_1 h_{t-1} e_{t-1}^2 e_t^2 \\
+&= \alpha_0 e_t^2 + \alpha_1 [\alpha_0 + \alpha_1 Z_{t-2}^2] e_{t-1}^2 e_t^2 \\
+&= \alpha_0 e_t^2 + \alpha_1 \alpha_0e_{t-1}^2 e_t^2 + \alpha_1^2 Z_{t-2}^2 e_{t-1}^2 e_t^2 \\
+&= \alpha_0 e_t^2 + \alpha_1 \alpha_0e_{t-1}^2 e_t^2 + \alpha_1^2 [h_{t-2}e_{t-2}^2] e_{t-1}^2 e_t^2 \\
+&= \alpha_0 e_t^2 + \alpha_1 \alpha_0e_{t-1}^2 e_t^2 + \alpha_1^2 [\alpha_0 + \alpha_1 Z_{t-3}^2 ] e_{t-2}^2 e_{t-1}^2 e_t^2 \\
+&=  \left\{\alpha_0 e_t^2 + \alpha_1 \alpha_0e_{t-1}^2 e_t^2  + \alpha_1^2 \alpha_0 e_{t-2}^2 e_{t-1}^2 e_t^2\right\} + \left\{\alpha_1^3  Z_{t-3}^2 e_{t-2}^2 e_{t-1}^2 e_t^2 \right\} \\
+&= \alpha_0 \sum_{j=0}^n \alpha_1^j e_t^2 e_{t-1}^2 \cdots e_{t-j}^2 + a_1^{n+1}Z_{t-n-1}^2 e_t^2 e_{t-1}^2 \cdots e_{t-n}^2
+\end{align*}
+
+
+## ARCH(1)
+
+\[
+Z_t^2 = \left( \alpha_0 \sum_{j=0}^n \alpha_1^j e_t^2 e_{t-1}^2 \cdots e_{t-j}^2\right) + \left(a_1^{n+1}Z_{t-n-1}^2 e_t^2 e_{t-1}^2 \cdots e_{t-n}^2\right)
+\]
+If $\alpha_1 < 1$:
+\begin{itemize}
+\item second term goes to $0$ as $n \to \infty$
+\item first term has a limit, let's call it $\alpha_0 \sum_{j=0}^{\infty}\alpha_1^j (e_t^2 \times \cdots \times e_{t-j}^2)$
+\end{itemize}
+so
+\begin{block}{}
+\[
+Z_t^2 = \alpha_0 \sum_{j=0}^{\infty} \alpha_1^j e_t^2 e_{t-1}^2 \cdots e_{t-j}^2
+\]
+\end{block}
+if we're looking at an infinitely long sequence.
+
+
+## ARCH(1)
+
+
+Weakly-stationary!
+
+\[
+E[Z_t] = E[\sqrt{h_t}e_t] = E[\sqrt{h_t}]E[e_t] = 0
+\]
+Marginal variance
+\begin{align*}
+\text{Var}[Z_t] &= E[Z_t^2] \\
+&= E[\alpha_0 \sum_{j=0}^{\infty} \alpha_1^j e_t^2 e_{t-1}^2 \cdots e_{t-j}^2] \tag{previous slide}\\
+&= \alpha_0 \sum_{j=0}^{\infty} \alpha_1^j = \alpha_0/(1-\alpha_1) \tag{linearity, independence, geom. series}
+\end{align*}
+Autocovariance
+\begin{align*}
+\gamma_Z(h) &= E[Z_{t+h}Z_t] = E[E(Z_{t+h}Z_t| e_s, s < t+h)] \tag{LTE} \\
+&= E[Z_t E(Z_{t+h}| e_s, s < t+h)] = 0
+\end{align*}
+
+But remember that volatility in this case is the **conditional** variance. 
+
+## ARCH(1)
+
+
+The ARCH(1) model is white noise, but not IID noise. 
+
+\begin{align*}
+E[Z_t^2|Z_{1:t-1}] &= E[(\alpha_0 + \alpha_1 Z_{t-1}^2)e_t^2|Z_{1:t-1}] \\
+&= (\alpha_0 + \alpha_1 Z_{t-1}^2) E[e_t^2|Z_{1:t-1}]\\
+&= (\alpha_0 + \alpha_1 Z_{t-1}^2) \\
+\end{align*}
+
+This depends on $Z_{t-1}$. It is **not** $E[Z_t^2] = \alpha_0 / (1- \alpha_1)$.
+
+## ARCH(1)
+
+
+$$
+E[Z_t^2|Z_{1:t-1}] = (\alpha_0 + \alpha_1 Z_{t-1}^2)
+$$
+So
+\begin{align*}
+\gamma(1)_{Z^2} 
+&= \mathbb{E}[Z_t^2 Z_{t-1}^2] \\
+&= E\left[Z_{t-1}^2 E\left(Z_t^2 \mid Z_{1:t-1} \right) \right] \\
+&= E\left[ Z_{t-1}^2(\alpha_0 + \alpha_1 Z_{t-1}^2) \right] \\
+&= \alpha_0 + \alpha_1 \gamma(0)_{Z^2}
+\end{align*}
+
+This is why we look at autocorrelation of the squared return process.
+
+TODO: homework generalize to lag greater than 1
+
+<!-- ## ARCH(1) -->
+
+
+<!-- Let's write down the conditional likelihood: -->
+<!-- \begin{align*} -->
+<!-- L &= f(z_n, z_{n-1},\ldots,z_2 |z_1) \\ -->
+<!-- &= \prod_{t=2}^n f(z_t|z_{1:t-1}) \\ -->
+<!-- &= \prod_{t=2}^n \frac{1}{\sqrt{2 \pi h_t } } \exp\left[- \frac{z_t^2}{2 h_t } \right] \tag{cndtl nrmlty} \\  -->
+<!-- &= \prod_{t=2}^n \frac{1}{\sqrt{2 \pi (\alpha_0 + \alpha_1 z_{t-1}^2) } } \exp\left[- \frac{z_t^2}{2(\alpha_0 + \alpha_1 z_{t-1}^2)  } \right] \tag{defn. $h_t$} -->
+<!-- \end{align*} -->
+
+TODO this can be made into a hw question ^
+
+## Example 1
+
+Fake data or real data?
+
+```{r, echo=F, eval=T}
+suppressMessages(library(fGarch, quietly = T, warn.conflicts = F))
+spec <- garchSpec(model = list(omega = 1, alpha = c(0.5),
+                  beta = 0))
+zt <- garchSim(spec, n = 1000)
+par(mfrow=c(3,1))
+plot.ts(zt)
+acf(zt)
+acf(zt^2)
+par(mfrow=c(1,1))
+```
+
+
+
+## Example 1
+
+Fake!
+
+```{r, echo=TRUE, eval=FALSE}
+library(fGarch)
+spec <- garchSpec(model = list(omega = 1, alpha = c(0.5),
+                  beta = 0))
+zt <- garchSim(spec, n = 1000)
+```
+
+
+
+
+## Example 2
+
+Another example ARMA(1,1) + GARCH(1,1): 
+\[
+X_t - \mu = \phi(X_{t-1} - \mu) + Z_t + \theta Z_{t-1} 
+\]
+\[
+Z_t = \sqrt{h_{t}}e_t
+\]
+\[
+h_t = \alpha_0 + \alpha_1 Z_{t-1}^2 + \beta_1 h_{t-1}
+\]
+
+## Example 2
+
+\includegraphics[width=75mm]{pics/garch/Rplot11.png}
+\includegraphics[width=575mm]{pics/garch/Rplot12.png}
+
+
+See code for more examples on how to simulate and estimate ARCH/GARCH models.
+
+
+
+## Sources:
+
+Chapters 7.1,7.2 of Introduction to Time Series and Forecasting Brockwell/Davis

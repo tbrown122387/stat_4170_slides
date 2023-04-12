@@ -52,7 +52,7 @@ $$
 
 ## Bond Markets
 
-*Bonds* are financial instruments represents one party lending money to another. 
+*Bonds* are financial instruments that represent one party lending money to another. 
 
 Governments and companies sell/issue bonds to borrow money. 
 
@@ -251,18 +251,20 @@ $$
 Then
 
 $$
-- \frac{dP}{dr} = \sum_{i=1}^k C_i e^{-r t_i} t_i
+- \frac{dP}{dr} = \sum_{i=1}^n C_i e^{-r t_i} t_i
 $$
 *Duration* is defined as
 $$
-D := - \frac{dP}{dr} P^{-1} = \sum_{i=1}^k \left[ \frac{C_i e^{-r t_i}}{P}\right] t_i
+D := - \frac{dP}{dr} P^{-1} = \sum_{i=1}^n \left[ \frac{C_i e^{-r t_i}}{P}\right] t_i
 $$
 
 ## Bond Markets
 
-Duration is positive. Its unit is years. 
+Duration $D$ is positive. Its unit is years. 
 
 If the yield increases by one percent, the percent change in a bond price is $-D$. :(
+
+Keeping duration relatively low is a risk-management strategy.
 
 If you're *forecasting* rate increases, you want to reduce your duration. If you're right, less pain. 
 

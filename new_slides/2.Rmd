@@ -17,7 +17,7 @@ Last class we learned about different types of financial instruments.
 
 There are also **derivatives** that you can trade. 
 
-The price of derivatives go up and down randomly, but their value is tied to an **underlying** asset. 
+The price of derivatives go up and down randomly, but their value is tied to (*derived* from) an **underlying** asset. 
 
 Speculators use these to gamble on the future, corporations and investors can use them to hedge/mitigate risk, and dealers can sell them and hedge their risk to make commissions.
 
@@ -32,6 +32,8 @@ If you buy a forward contract, you agree to buy the underlying on the future dat
 If you sell a forward contract, you agree to sell the underlying on the future date.
 
 At any given moment, the forward price should "sort of close" to the *spot* price.
+
+The spot price of something is the price of it *right now*, not a ways in the future.
 
 
 ## Futures and Forwards

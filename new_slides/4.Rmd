@@ -56,7 +56,7 @@ X_t = \psi(B) Z_t = \left( \sum_{j=-\infty}^{\infty} \psi_j B^j \right) Z_t.
 ## Linear Processes
 
 
-Some Linear Processes aren't always useful in finance. 
+Some linear processes aren't always used in finance. 
 
 We don't always want to study models where $X_t$ depends on future noise $Z_{t+j}$. 
 
@@ -99,7 +99,7 @@ Call $\phi^{-1}(z) = \psi(z) = 1 + \psi_1 z + \psi_2 z^2 + \cdots$
 Solve 
 
 $$
-1 = 1 + 0 z + 0z^2 + \cdots  = (1 - \phi z)(1 + \psi_1 z + \psi_2 z^2 + \cdots)
+1  = (1 - \phi z)(1 + \psi_1 z + \psi_2 z^2 + \cdots)
 $$
 
   - $0 = \psi_1  - \phi$
@@ -325,7 +325,7 @@ The confidence interval still covers $0$, which isn't great.
 ## Example
 
 What about $\{\hat{\rho}(h)\}_{h\ge 1}$ ?
-```{r}
+```{r, out.width="70%"}
 # don't query data from yahoo to often, otherwise they'll throttle you
 quantmod::getSymbols("VXX")
 logReturns <- diff(log(VXX$VXX.Adjusted))[-1]*100
